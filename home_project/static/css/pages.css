@@ -1,0 +1,35 @@
+#heading h1{
+    font-size: 50px;
+    font-weight: 400;
+}
+#heading p{
+    font-size:15px;
+    font-style: italic;
+    color:red;
+}
+#banner{
+    text-align: center;
+}
+
+#banner img{
+    width:900px; 
+    height:500px;
+}
+
+#banner #offer{
+    padding-top: 100px;
+    background-color: rgb(234, 174, 20);
+    text-align: center;
+}
+#banner h3{
+    font-size: 50px;
+}
+#banner h1{
+    font-size: 100px;
+}
+
+#banner button{
+    height:10px;
+    font-size: 30px;
+}
+

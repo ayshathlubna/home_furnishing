@@ -1,0 +1,156 @@
+{% extends 'admin/admin_extend.html' %}
+{% block 'title'%} Add Product  {% endblock %}
+{% load static %}
+{% block 'style' %} 
+<link rel="stylesheet" href="{% static 'css/insert.css' %}">
+{% endblock %} 
+{% block 'content' %}
+    <div class="container-fluid text-center m-3 p-3">
+        <h4> Add Products </h4>
+
+        {% if messages %}  <!-- for printing the error messages in the views -->
+            {% for message in messages %}
+                <div class="alert">{{message}} </div>
+            {% endfor %}
+        {% endif %}
+
+        <div class="container d-flex justify-content-center">
+        <form class="form-class" action="" method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+
+            <div class="insert_id form-container">
+                <label for="">
+                    Product ID 
+                </label>
+                <input style="margin-left: 25px;" type="text"  name="p_id" required>
+            </div>
+            <div class="insert_id form-container">
+                <label for="">
+                    Date
+                </label>
+                <input style="margin-left: 25px;" type="date" name="date">
+            </div>
+
+            <div class="insert_id form-container">
+                <label for="">
+                    Product Name
+                </label>
+                <input style="margin-left: 25px;" type="text"  name="p_name" required>
+            </div>
+
+            <div class="insert_id form-container">
+                <label for="">
+                    Color
+                </label>
+                <input style="margin-left: 25px;" type="text"  name="color">
+            </div>
+
+            <div class="insert_id form-container">
+                <label for="">
+                    Brand
+                </label>
+                <input style="margin-left: 25px;" type="text" name="brand">
+            </div>
+
+            <div class="insert_id form-container">
+                <label for="">
+                    Category
+                </label>
+                <select name="category" id="category-select" required>
+                    <option value="">-- Select Category --</option>
+                    {% for i in categories %}
+                        <option value="{{ i.category_id }}">{{ i.category_name }}</option>
+                    {% endfor %}
+                </select>
+
+            </div>
+
+            <div class="insert_id form-container">             
+                <label for="">
+                    Sub-Category
+                </label>
+
+                <select name="sub_category" id="sub-category-select" required>
+                    <option value="">-- Select Sub-Category --</option>
+                </select>
+
+            </div>
+
+            <div class="insert_id form-container">
+                <label for="">
+                    Description
+                </label>
+                <input style="margin-left: 25px;" type="textarea"  name="description">
+            </div>
+
+            <div class="insert_id form-container">
+                <label for="">
+                    Stock
+                </label>
+                <input style="margin-left: 25px;" type="text"  name="stock" required>
+            </div>
+
+            <div class="insert_id form-container">
+                <label for="">
+                    Price
+                </label>
+                <input style="margin-left: 25px;" type="text"  name="price" required>
+            </div>
+
+            <div class="insert_id form-container">
+                <label for="">
+                    Warranty
+                </label>
+                <input style="margin-left: 25px;" type="text"  name="warranty">
+            </div>
+
+            <div class="insert_id form-container">
+                <label for="">
+                    Product Images
+                </label>
+                <input style="margin-left: 25px;" type="file" name="images" id="image-input" multiple>
+            </div>
+
+
+            <a href="">
+                <button id="add_button">Add</button>
+            </a>
+        </form>
+    
+    </div>
+
+    </div>
+
+    <script>
+
+document.getElementById('category-select').addEventListener('change', function () {
+    // const a=document.getElementById('category-select').value
+    // console.log("id:", a)
+    const categoryId = this.value;
+    console.log(categoryId)
+    const subCategorySelect = document.getElementById('sub-category-select');
+
+    subCategorySelect.innerHTML = '<option value="">Loading...</option>';
+   
+    fetch(`/product_app/get_subcategories/${categoryId}/`)
+    
+        .then(response => response.json())
+        .then(data => {
+            subCategorySelect.innerHTML = '<option value="">-- Select Sub-Category --</option>';
+            data.sub_categories.forEach(function (item) {
+                const option = document.createElement('option');
+                option.value = item.id;
+                option.textContent = item.name;
+                subCategorySelect.appendChild(option);
+                console.log(subCategorySelect)
+            });
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            subCategorySelect.innerHTML = '<option value="">Error loading</option>';
+        });
+});
+</script>
+
+
+{% endblock%}

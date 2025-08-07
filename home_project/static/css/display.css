@@ -1,0 +1,13 @@
+.container .custom-table tr:nth-child(even) {
+    background-color:blue;
+}
+
+/* Optional: header styling */
+.container .custom-table thead tr {
+    background-color: #333;
+    color: #fff;
+}
+
+.container h4{
+    color:blue;
+}

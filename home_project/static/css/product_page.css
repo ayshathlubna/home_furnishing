@@ -1,0 +1,73 @@
+.carousel-control-prev,
+.carousel-control-next {
+  top: 50%;
+  transform: translateY(-50%);
+  width: auto;
+  background-color:red;
+  color: blue;
+  padding: 1px;
+  border-radius: 50%;
+  opacity: 1;
+}
+
+.carousel-control-prev {
+  left: -100px; /* Adjust to move further outside */
+}
+
+.carousel-control-next {
+  right: -200px;
+}
+
+.carousel-control-prev-icon,
+.carousel-control-next-icon {
+  background-image: red;
+  color: black;
+}
+
+.carousel-control-prev-icon::after,
+.carousel-control-next-icon::after {
+  font-size: 24px;
+  font-weight: bold;
+  color: black;
+}
+
+.carousel-control-prev-icon::after {
+  content: '‹';
+  font-size: 20px;
+}
+
+.carousel-control-next-icon::after {
+  content: '›';
+}
+
+#multiItemCarousel{
+    width: 100%;
+ 
+}
+
+#cart_button{
+    display: none;
+}
+#cardid:hover #cart_button{
+    display: block;
+}
+#cardid a, #carousel_tag a{
+    text-decoration: none; 
+    color:black;
+}
+#cardid{
+    position: relative;
+    display: inline-block;
+}
+#cardid p{
+    position: absolute;
+    top: 10px;
+    left: 20px;
+    background-color: red;
+    color: white;
+    padding: 5px 10px;
+    font-weight: bold;
+    border-radius: 5px;
+    z-index: 4;
+    font-size: 14px;
+}

@@ -1,0 +1,39 @@
+{% extends 'admin/admin_extend.html' %}
+{% block 'title'%} Update Discounts {% endblock %}
+{% load static %}
+{% block 'style' %} 
+<link rel="stylesheet" href="">
+{% endblock %} 
+{% block 'content' %}
+<div class="container">
+
+    <form action="{% url 'update_discount' discount.id %}" method="POST">
+        {% csrf_token %}
+        <h4>update discount</h4>
+        {% if messages %}  <!-- for printing the error messages in the views -->
+                     {% for message in messages %}
+                <div class="alert">{{message}} </div>
+            {% endfor %}
+        {% endif %}
+        <div>
+            <label for="">Product ID </label>
+            <select name="p_id" id="" class="form-control">
+                <option value="{{discount.product.p_id}}">{{discount.product.p_name}}</option>
+                {% for i in products %}
+                    <option value="{{i.p_id}}">{{i.p_name}}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div>
+        <label for="">Discount Percentage </label>
+        <input type="text" name='disc_percent' value={{discount.disc_percent}}>
+        </div>
+        
+        <a href="">
+        <button>UPDATE</button>
+        </a>
+
+    </form>
+
+</div>
+{% endblock %}

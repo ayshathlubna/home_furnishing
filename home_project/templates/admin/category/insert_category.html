@@ -1,0 +1,40 @@
+{% extends 'admin/admin_extend.html' %}
+{% block 'title'%} Add Category  {% endblock %}
+{% load static %}
+{% block 'style' %} 
+<link rel="stylesheet" href="{% static 'css/insert.css' %}">
+{% endblock %} 
+{% block 'content' %}
+    <div class="container-fluid text-center m-3 p-3">
+        <h4> Add Categories </h4>
+        <div class="container d-flex justify-content-center">
+        <form action="" method="POST" enctype="multipart/form-data">> 
+            {% csrf_token %}
+            <div class="insert_id">
+            <label for="">
+                Category ID 
+            </label>
+            <input style="margin-left: 25px;" type="text" placeholder="Enter a category ID" name="category_id">
+            </div>
+            <div class="insert_id">
+            <label for="">
+                Category Name
+            </label>
+            <input type="text" placeholder="Add a category name" name="category_name">
+            </div>
+            <div class="insert_id">
+            <label for="">
+                Image
+            </label>
+            <input type="file"  name="image" id="image-input">
+            </div>
+            <a href="">
+                <button id="add_button">Add</button>
+            </a>
+        </form>
+    
+    </div>
+
+    </div>
+
+{% endblock%}

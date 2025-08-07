@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block 'title' %}  {% endblock %}</title>
+    {% load static %}
+    {% block 'style' %} {% endblock %} 
+
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
+
+</head>
+<body>
+    {% comment %} <div class=" container-fluid text-center">
+    <a class="navbar-brand" href="">
+        <img style="width:800px; height:100px; margin-top: 10px; " src="{% static 'images\logo.png' %}" alt="Logo">
+    </a> 
+    </div> {% endcomment %}
+
+    {% block 'content' %}
+    {% endblock %}
+    
+</body>
+</html>

@@ -1,0 +1,122 @@
+{% extends 'admin/admin_extend.html' %}
+{% load static %}
+{% block 'title' %} Display Category {% endblock %}
+{% block 'style' %} 
+<link rel="stylesheet" href="{% static 'css/display.css' %}">
+{% endblock %}
+{% block 'content' %}
+<div class="container">
+    <!-- Add Category Button -->
+<div class="text-end mb-3">
+    <a href="{% url 'add_product' %}">
+    <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addCategoryModal">
+        ➕ Add a Category
+    </button>
+    </a>
+</div>
+
+    <h4>Categories</h4>
+    <p><strong>Total products:</strong> {{ products|length }}</p>
+
+    {% comment %} <form method="GET" class="mb-3 d-flex align-items-center justify-content-end">
+        <label for="category" class="me-2">
+            Filter by Category:
+        </label>
+        <select name="category" id="category" class="form-select w-auto me-2" onchange="this.form.submit()">
+            <option value="">-- All Categories --</option>
+            {% for cat in categories %}
+                <option value="{{ cat.category_id }}" {% if cat.category_id == selected_category %}selected{% endif %}>
+                    {{ cat.category_name }}
+                </option>
+            {% endfor %}
+    </select>
+    <noscript><button type="submit" class="btn btn-primary">Filter</button></noscript>
+</form> {% endcomment %}
+<form method="GET" class="mb-3 d-flex align-items-center justify-content-end">
+    <input type="hidden" name="section" value="products">
+    
+    <label for="category" class="me-2">
+        Filter by Category:
+    </label>
+    <select name="category" id="category" class="form-select w-auto me-2" onchange="this.form.submit()">
+        <option value="">-- All Categories --</option>
+        {% for cat in categories %}
+            <option value="{{ cat.category_id }}" {% if cat.category_id == selected_category %}selected{% endif %}>
+                {{ cat.category_name }}
+            </option>
+        {% endfor %}
+    </select>
+    
+    <noscript><button type="submit" class="btn btn-primary">Filter</button></noscript>
+</form>
+
+{% comment %} {% if selected_category %}
+    <div class="text-end mb-3">
+        <a href="{% url 'display_product' %}" class="btn btn-outline-secondary">Clear Filter</a>
+    </div>
+{% endif %} {% endcomment %}
+{% if selected_category %}
+    <div class="text-end mb-3">
+        <a href="{% url 'dashboard' %}?section=products" class="btn btn-outline-secondary">Clear Filter</a>
+    </div>
+{% endif %}
+
+    <table class="table custom-table">
+        <thead>
+        <tr>
+            <th>Prouct ID</th>
+            <th>Date </th>
+            <th>Product Name</th>
+            <th>Color</th>
+            <th>Brand</th>
+            <th>Category</th>
+            <th>Sub-Category</th>
+            <th>Description</th>
+            <th>Stock</th>
+            <th>Price</th>
+            <th>Warranty</th>
+            <th>images</th>
+            <th>Update</th>
+            <th>Delete</th>
+        </tr>
+        </thead>
+        <tbody>
+                {% for i in products %}
+            <tr>
+                <td>{{i.p_id}}</td>
+                <td>{{i.date}}</td>
+                <td>{{i.p_name}}</td>
+                <td>{{i.color}}</td>
+                <td>{{i.brand}}</td>
+                <td>{{i.category}}</td>
+                <td>{{i.sub_category}}</td>
+                <td>{{i.description}}</td>
+                <td>{{i.stock}}</td>
+                <td>{{i.price}}</td>
+                <td>{{i.warranty}}</td>
+                <td>{% for img in i.product_image_set.all %}
+                        {% if img.image %}
+                            <img src="{{ img.image.url }}" alt="Image" width="70" style="margin:5px;" />
+                        {% else %}
+                            <span>No image</span>
+                        {% endif %}
+                    {% endfor %}
+            </td>
+
+                <td>
+                    <a href="{% url 'update_product' i.p_id %}">
+                        <button>Edit</button>
+                    </a>
+                </td>
+                <td>
+                    <a href="{% url 'delete_product' i.p_id %}" onclick="return confirm('Are you sure you want to delete this category? This action cannot be undone.');">
+                        <button>Delete</button>
+                    </a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+
+    </table>
+</div>
+{% endblock %}

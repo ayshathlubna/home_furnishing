@@ -1,0 +1,42 @@
+{% extends "user/extend.html" %}
+{% block 'title' %} Login Page {% endblock %}
+{% block 'content' %}
+    <div class="container w-50 bg-primary mt-5 px-5 py-5">      
+        <div class="container p-2 w-75 h-50 border rounded bg-light">
+    <form action="" method="POST">
+        {% csrf_token %}
+
+  
+            <h1 class="text-center mt-4 mb-5">Login Form</h1>
+        
+            <div class="container d-flex flex-column w-75 p-1">
+                <label for="">Username</label>
+                <input type="text" name="username" id="username">
+            </div>
+            <div class="container d-flex flex-column w-75 p-1">
+                <label for="">Password</label>
+                <input type="text" name="password" id="password">
+            </div>
+            {% for i in messages %}
+            <p>{{i}}</p>
+            {% endfor %}
+            <div class="container d-flex justify-content-center">
+                <a href="{% url 'product_page' %}">
+                <button class="p-1 m-3 bg-primary text-light w-50 border none">
+                Login
+                </button>
+            </a>
+            </div>
+
+            
+        </form>
+        
+<div class="container text-center ">
+                <p> Don't have an account? </p>
+                <a href="{% url 'signup' %}">
+                    <button class="p-1 m-3 bg-primary text-light w-50 border-0">
+                        Sign Up
+                    </button>
+                 </a>
+            </div></div>  </div>
+{% endblock %}

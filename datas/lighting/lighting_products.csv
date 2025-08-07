@@ -1,0 +1,16 @@
+product_id,name,brand,category,subcategory,description,stock,price,discounted_price,warranty,image_url
+LIG_001,Melody Shellacs Glass Pendant Lamp,Brand1,Lighting,Ceiling Lights,High-quality ceiling lights for your lighting space.,3,5599,900,1 year(s),https://example.com/lighting/ceiling lights_1.jpg
+LIG_002,Riviera Dune Ceramic Table Lamp,Brand2,Lighting,Table Lamps,High-quality table lamps for your lighting space.,6,1799,990,2 year(s),https://example.com/lighting/table lamps_2.jpg
+LIG_003,HOMESAKE Metal Floor Lamp,Brand3,Lighting,Floor Lamps,High-quality floor lamps for your lighting space.,9,4398,1080,3 year(s),https://example.com/lighting/floor lamps_3.jpg
+LIG_004,HOMESAKE Metal Pendant Ceiling Lamp,Brand4,Lighting,Ceiling Lights,High-quality ceiling lights for your lighting space.,12,3798,1170,1 year(s),https://example.com/lighting/ceiling lights_4.jpg
+LIG_005,HOMESAKE Metal Crystal Table Lamp,Brand5,Lighting,Table Lamps,High-quality table lamps for your lighting space.,15,5500,1260,2 year(s),https://example.com/lighting/table lamps_5.jpg
+LIG_006,HOMESAKE Wooden Floor Lamp,Brand1,Lighting,Floor Lamps,High-quality floor lamps for your lighting space.,18,3998,1350,3 year(s),https://example.com/lighting/floor lamps_6.jpg
+LIG_007,HOMESAKE Metal Cluster Ceiling Lamp,Brand2,Lighting,Ceiling Lights,High-quality ceiling lights for your lighting space.,21,5500,1440,1 year(s),https://example.com/lighting/ceiling lights_7.jpg
+LIG_008,Monolith Marvel Ceramic Pebble Table Lamp,Brand3,Lighting,Table Lamps,High-quality table lamps for your lighting space.,24,1399,1530,2 year(s),https://example.com/lighting/table lamps_8.jpg
+LIG_009,Melody Maf Metal Floor Lamp,Brand4,Lighting,Floor Lamps,High-quality floor lamps for your lighting space.,27,4999,1620,3 year(s),https://example.com/lighting/floor lamps_9.jpg
+LIG_010,Melody Maf Metal Ceiling Lamp,Brand5,Lighting,Ceiling Lights,High-quality ceiling lights for your lighting space.,30,7999,1710,1 year(s),https://example.com/lighting/ceiling lights_10.jpg
+LIG_011,HOMESAKE Wooden Table Lamp,Brand1,Lighting,Table Lamps,High-quality table lamps for your lighting space.,33,2000,1800,2 year(s),https://example.com/lighting/table lamps_11.jpg
+LIG_012,Fluorescence Glint Metal Floor Lamp with Shelves,Brand2,Lighting,Floor Lamps,High-quality floor lamps for your lighting space.,36,4999,1890,3 year(s),https://example.com/lighting/floor lamps_12.jpg
+LIG_013,Serena Amora Glass Hanging Light,Brand3,Lighting,Ceiling Lights,High-quality ceiling lights for your lighting space.,39,699,1980,1 year(s),https://example.com/lighting/ceiling lights_13.jpg
+LIG_014,Serena Winsel Set of 2 Glass LED Candle Light,Brand4,Lighting,Table Lamps,High-quality table lamps for your lighting space.,42,1499,2070,2 year(s),https://example.com/lighting/table lamps_14.jpg
+LIG_015,HOMESAKE Wooden Floor Lamp red,Brand5,Lighting,Floor Lamps,High-quality floor lamps for your lighting space.,45,7400,2160,3 year(s),https://example.com/lighting/floor lamps_15.jpg

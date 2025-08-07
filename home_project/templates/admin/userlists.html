@@ -1,0 +1,63 @@
+{% extends 'admin/admin_extend.html' %}
+{% block 'title' %}Admin Page {% endblock%} 
+{% block 'content' %}
+    <div class="container">
+        
+        {% comment %} <a href="{% url 'new_user' %}">
+        <button class="float-right">Add User</button></a> {% endcomment %}
+   
+        <table class="table table-bordered table-striped">
+            <thead>
+                <th>ID</th>
+                <th>First_name</th>
+                <th>Last_name</th>
+                <th>Username</th>
+                <th>Gender</th>
+                <th>DOB</th>
+                <th>Email</th>
+                <th>Contact no</th>
+                <th>Address</th>
+                <th>Update</th>
+                <th>Delete</th>
+                <th>Status</th>
+            </thead>
+           <tbody>
+            {% for i in users %}
+            <tr>
+                <td>{{i.id}}</td>
+                <td>{{i.first_name}}</td>
+                <td>{{i.last_name}}</td>
+                <td>{{i.username}}</td>
+                <td>{{i.profile.gender}}</td>
+                <td>{{i.date_of_birth}}</td>
+                <td>{{i.email}}</td>               
+                <td>{{i.profile.mobile}}</td>
+                <td>{{i.profile.address}}</td>
+                <td>
+                    <a href="{% url 'user_update' i.id %}" >
+                        <button>Edit</button>
+                    </a>
+                </td>
+                <td>
+                    <a href="{% url 'user_delete' i.id %}" onclick="return confirm('Are you sure you want to delete your profile? This action cannot be undone.');">
+                        <button>Delete</button>
+                    </a>
+                </td>
+                <td> 
+                    <a href="{% url 'status_update' i.id %}">
+                    {% if i.is_active %}
+                       
+                        <button>Active</button>
+                    {% else %}
+                        <button>Blocked</button>
+                        {% endif %}
+                    </a>
+                </td>
+            
+            </tr>
+            {% endfor %}
+            </tbody>
+            </table>
+    </div>
+
+{% endblock %}
