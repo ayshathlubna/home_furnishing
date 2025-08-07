@@ -1,0 +1,62 @@
+ {% extends "user/extend.html" %}
+ {% block 'title' %} signup page {% endblock%}
+ {% block 'content' %}
+    <form action="" method="POST">
+      {% csrf_token %}
+
+      <div class="container w-50 bg-primary mt-3 px-5 py-5">
+        <div class="container p-2 w-75 h-50 border rounded bg-light">
+          <h1 class="text-center mt-3 mb-4">Sign Up Form</h1>
+          <div class="container d-flex flex-column w-75 p-1">
+            <label for="">First Name</label>
+            <input type="text" placeholder="First name" name="first" id="f" />
+            <div id="error"></div>
+          </div>
+          <div class="container d-flex flex-column w-75 p-1">
+            <label for="">Last name</label>
+            <input type="text" placeholder="Last name" name="last" />
+          </div>
+          <div class="container d-flex flex-column w-75 p-1">
+            <label for="">Username</label>
+            <input type="text" placeholder="Username" name="username" />
+            {% for i in messages %}
+            <p>{{i}}</p>
+            {% endfor %}
+          </div>
+          <div class="container d-flex flex-column w-75 p-1">
+            <label for="">Password</label>
+            <input type="password" placeholder="Password" name="password" />
+          </div>
+          <div class="container d-flex flex-column w-75 p-1">
+            <label for="">Confirm password</label>
+            <input
+              type="password"
+              placeholder="Re-enter password"
+              name="confirm_password"
+            />
+          </div>
+          <div class="container d-flex flex-column w-75 p-1">
+            <label for="">Email</label>
+            <input type="email" placeholder="Enter email" name="email" />
+          </div>
+          <div class="container d-flex justify-content-center">
+
+            <button class="p-1 m-3 bg-primary text-light w-50 border none">
+              Sign Up
+            </button>
+         </div>
+          </form>
+            <div class="text-center">
+                <p>Already have an account? click below</p>
+                <a href="{% url 'signin' %}"<button class="btn btn-primary w-50">
+                Login
+                </button></a>
+            </div>
+          
+        </div>
+      </div>
+   
+    <script>
+      function error_message() {}
+    </script>
+  {% endblock %}

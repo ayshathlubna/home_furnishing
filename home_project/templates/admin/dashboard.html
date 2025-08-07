@@ -1,0 +1,45 @@
+{% extends "admin/admin_extend.html" %}
+{% block 'title' %} Dashboard {% endblock %}
+{% block 'content' %}
+<div class="container-fluid ">
+    <div class="container d-flex m-5  ">
+        <div class="container d-flex flex-column border  w-25 py-5">
+            <h5>Categories </h5>
+            <p></p>
+
+            <!-- <a href="{% url 'userlist' %}">
+                <p>User</p>
+            </a>
+            <a href="{% url 'display_product' %}">
+                <p>Products</p>
+            </a>
+            <p>Orders</p> -->
+
+            <a href="{% url 'dashboard' %}?section=user">
+                <p>User</p>
+            </a>
+            <a href="{% url 'dashboard' %}?section=products">
+                <p>Products</p>
+            </a>
+            <a href="{% url 'dashboard' %}?section=orders">
+                <p>Orders</p>
+            </a>
+            <a href="{% url 'logout' %}">
+                        <button style="margin: 20px;">Logout</button>
+            </a>
+
+        </div>
+        <div class="container d-flex flex-column  text-center ">
+            <h3>Dashboard</h3>
+            {% if section == "user" %}
+                {% include 'admin/userlists.html' %}
+            {% elif section == "products" %}
+                {% include 'admin/product/display_product.html' %}
+            <!-- {% elif section == "orders" %}
+                {% include 'admin/partials/orders_list.html' %} -->
+            {% else %}
+                <p>Welcome to the dashboard! Select a category to view its content.</p>
+            {% endif %}
+        </div>
+</div>
+{% endblock %}
