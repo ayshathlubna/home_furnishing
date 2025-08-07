@@ -13,7 +13,7 @@
 <div class="container my-5">
     <div id="multiItemCarousel" class="carousel slide" data-bs-ride="carousel">
         <div class="carousel-inner">
-
+            
             {% for group in sub_cat_groups %}
             <div class="carousel-item {% if forloop.first %}active{% endif %}">
                 <div class="row justify-content-center ">
@@ -125,8 +125,9 @@
         <div class="row" style="width:100%">
             {% for i in product_images %}
             <div class="card mx-3 my-2" style="width: 18rem;" id="cardid">
-                <a href="" >
+                <a href="{% url 'product_details' i.product_id.p_id %}" >
                     <div>
+                        
                     <img src="{{ i.image.image.url }}" class="img-thumbnail" alt="{{ i.product_id.p_name }}">
                     </div>
                     <div class="card-body">

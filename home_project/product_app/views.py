@@ -180,6 +180,17 @@ def delete_discount(request,id):
 
 def product_details(request,id):
     product = Products.objects.get(p_id = id)
-    discount = Discount.objects.get(product = product)
-    return render(request,'product/product_details.html',locals())
+    product_image =Product_image.objects.filter(p_id=product)
+    discount = Discount.objects.filter(product=product).first()
+    product_images = []
+    all_products = Products.objects.filter(sub_category = product.sub_category).exclude(p_id=product.p_id)[:4]
+    for p in all_products:
+        image = Product_image.objects.filter(p_id=p).first()
+        discount = Discount.objects.filter(product=p).first()
+        product_images.append({
+            'product_id': p,
+            'image': image,
+            'discount': discount
+        })
+    return render(request,'user/product_details.html',locals())
 
