@@ -264,15 +264,17 @@ def product_page(request, id=None, sub_id=None):
     sub_cats = Sub_category.objects.all()
 
     selected_category = request.GET.get('category')
+    
     order = request.GET.get('order')
-
+    
     all_products = Products.objects.all()
-
+    
     category_name = None
     subcategory_name = None
 
+
     # 1. If subcategory is selected from carousel/navbar
-    if sub_id:
+    if sub_id and sub_id != 'None':
         all_products = Products.objects.filter(sub_category=sub_id)
         try:
             sub_obj = Sub_category.objects.get(sub_cat_id=sub_id)
@@ -284,8 +286,11 @@ def product_page(request, id=None, sub_id=None):
 
     # 2. If category is selected from dropdown
     elif selected_category:
+        print('fgfg')
         sub_categories = Sub_category.objects.filter(category_id=selected_category)
+        print(sub_categories)
         all_products = Products.objects.filter(sub_category__in=sub_categories)
+        print(all_products)
         category_name = Category.objects.get(category_id=selected_category).category_name
 
     # 3. Sorting logic
@@ -311,6 +316,7 @@ def product_page(request, id=None, sub_id=None):
     for product in all_products:
         image = Product_image.objects.filter(p_id=product).first()
         discount = Discount.objects.filter(product=product).first()
+        print(discount)
         product_images.append({
             'product_id': product,
             'image': image,
@@ -413,3 +419,4 @@ def profile_delete(request):
 def logout_profile(request):
     logout(request)
     return redirect('home')
+

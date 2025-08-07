@@ -1,0 +1,119 @@
+{% extends 'user/extend.html' %}
+{% load static %}
+
+{% block 'title' %} Product Details {% endblock %}
+
+{% block 'style' %}
+<link rel="stylesheet" href="{% static 'css/display.css' %}">
+{% endblock %}
+
+{% block 'content' %}
+
+<div class="container">
+
+    <div class="row d-flex border ">
+        <div id="productCarousel" class="carousel slide w-50" data-bs-ride="carousel">
+            <div class="carousel-inner">
+                {% for img in product_image %}
+                <div class="carousel-item {% if forloop.first %}active{% endif %}">
+                    <img src="{{ img.image.url }}" class="d-block w-100" alt="{{ product.p_name }}" style="height:400px; object-fit:cover; padding: 50px;">
+                </div>
+                {% endfor %}
+            </div>
+
+                <!-- Controls -->
+            <button class="carousel-control-prev" type="button" data-bs-target="#productCarousel" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon"></span>
+                <span class="visually-hidden text-primary bg-dark">Previous</span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#productCarousel" data-bs-slide="next">
+                <span class="carousel-control-next-icon"></span>
+                <span class="visually-hidden">Next</span>
+            </button>
+        </div>
+
+
+        <div class="col-md-6 p-5">
+            <h3>{{ product.p_name }}</h3>
+            <!-- <p><strong>Price:</strong> -->
+                {% if discount %}
+                    <h4 style="text-decoration: line-through;color:red;">₹{{ product.price }}</h4>
+                    <h2>₹{{ discount.discounted_price }}</h2>
+                    <p>You save <br>
+                    <span>₹{{discount.disc_price}} ({{ discount.disc_percent|floatformat:0 }}% OFF)</span>
+                        </p>
+                {% else %}
+                    <h2 class="text-dark fw-bold my-4">₹{{ product.price }}</h2>
+                {% endif %}
+            
+                <button class="btn border" style="background-color: orange;width:300px;margin-top: 50px;font-weight: bold;"> 
+                    <i class="fa-solid fa-cart-shopping me-3" id="cart"></i>Add to Cart
+                </button>
+        </div>
+    </div>
+    <div>
+        <h4 class="mx-3 mt-5">Product Details</h4>
+        <table class="table mx-3 my-4">
+            <tr>
+                <td>Product Name </td>
+                <td>: {{product.p_name}}</td>
+            </tr>
+            <tr>
+                <td>Color </td>
+                <td>: {{product.color}}</td>
+            </tr>
+            <tr>
+                <td>Brand </td>
+                <td>: {{product.brand}}</td>
+            </tr>
+            <tr>
+                <td>category </td>
+                <td>: {{product.category}}</td>
+            </tr>
+            <tr>
+                <td>Description </td>
+                <td>: {{product.description}}</td>
+            </tr>
+            <tr>
+                <td>Warranty </td>
+                <td>: {{product.warranty}}</td></tr>
+        </table>
+
+    </div>
+    <div>
+        <h4>Similar Products</h4>
+        <div class="row">
+            {% for i in product_images %}
+            <div class="card mx-3 my-2" style="width: 250px;" id="cardid">
+                <a href="{% url 'product_details' i.product_id.p_id %}" style="text-decoration: none;color:black;">
+               
+                    <img src="{{ i.image.image.url }}" class="img-thumbnail" alt="{{ i.product_id.p_name }}">
+
+                    <div class="card-body">
+                        <div class="d-flex gap-5 mt- justify-content-between">
+                            {% if i.discount.discounted_price %}
+                                <h6 style="text-decoration: line-through;">{{i.product_id.price}}</h6>
+                                <h6>{{i.discount.discounted_price}}</h6>
+                                <p>{{ i.discount.disc_percent|floatformat:0}}% OFF</p>
+                            {% else %}
+                                <h6>{{i.product_id.price}}</h6>
+                            {% endif %}
+                        </div>
+                        <h6 class="card-title">{{ i.product_id.p_name }}</h6>
+                        
+                    <div>
+                </a>
+                
+            </div> 
+                    </div>        
+            </div>
+            
+        
+            {% endfor %}
+        </div>
+
+    </div>
+</div>
+
+
+{% endblock %}
