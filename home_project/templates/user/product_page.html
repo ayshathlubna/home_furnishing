@@ -124,14 +124,23 @@
 
         <div class="row" style="width:100%">
             {% for i in product_images %}
-            <div class="card mx-3 my-2" style="width: 18rem;" id="cardid">
+            <div class="card mx-3 my-2" style="width: 18rem;position:relative" id="cardid">
                 <a href="{% url 'product_details' i.product_id.p_id %}" >
                     <div>
                         
                     <img src="{{ i.image.image.url }}" class="img-thumbnail" alt="{{ i.product_id.p_name }}">
+                    
                     </div>
+                    
                     <div class="card-body">
+                        <a href="{% url 'toggle_wishlist' i.product_id.p_id %}">
+                            <i class="fa-solid fa-heart 
+                            {% if product.id in wishlist_ids %}text-danger{% else %}text-white{% endif %}"
+                            style="position: absolute; margin-top: -270px; margin-left: 200px; font-size: 30px;">
+                            </i>
+                        </a>
                         <div class="d-flex gap-5 mt- justify-content-between">
+                            
                             {% if i.discount.discounted_price %}
                                 <h6 style="text-decoration: line-through;">{{i.product_id.price}}</h6>
                                 <h6>{{i.discount.discounted_price}}</h6>
@@ -144,7 +153,9 @@
                         
                     <div>
                 </a>
-                <a href="#" class="btn btn-primary" id="cart_button">Add to Cart</a>
+                <div>
+                <a href="{% url 'add_to_cart' i.product_id.p_id %}" class="btn btn-primary" id="cart_button">Add to Cart</a>
+                </div>
             </div> 
                     </div>        
             </div>
