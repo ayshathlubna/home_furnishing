@@ -1,0 +1,69 @@
+{% extends 'user/extend.html' %}
+ {% load static %}
+{% block 'title' %}My Cart{% endblock %}
+
+{% block 'content' %}
+
+<div class="container">
+    <div>
+        <h3 style="margin:20px 30px;">My wishlist ({{total_items}})</h3>
+        <div style="margin: 30px;" >
+            {% for item in wishlist_items %}          
+
+            <div style="display: flex; margin-bottom:20px; padding: 5px; 
+                        line-height: 6px; width:1300px; ">
+                
+                    <a href="{% url 'product_details' item.product.p_id %}" class="d-flex flex-row " style="width:1100px;text-decoration: none; color:black; display: block;">
+                  
+                    
+                        <div>
+                            {% if item.product_image %}
+                                <img src="{{ item.product_image.image.url }}" 
+                                    alt="{{ item.product.p_name }}" 
+                                    width="120" height="120">
+                            {% else %}
+                                <p>No image available</p>
+                            {% endif %}
+                        </div>
+
+                        <div style="padding-left: 20px;width:700px;">
+                            <div style="display:flex; justify-content: space-between; width: 1000px;">
+                                <h3>{{ item.product.p_name }}</h3>
+                            </div>
+
+                            <div>
+                                <p>{{ item.product.description|truncatewords:15 }}</p>
+                                <p>
+                                    {% if item.product.price != item.product.disc_price %}
+                                        <span style="text-decoration: line-through;">₹{{ item.product.price }}</span>
+                                        <strong style="color: green;">₹{{ item.product.disc_price }}</strong>
+                                        {% if item.product.disc_percent > 0 %}
+                                            <span style="color: red;">({{ item.product.disc_percent }}% off)</span>
+                                        {% endif %}
+                                    {% else %}
+                                        <span><b>₹{{ item.product.price }}</b></span>
+                                    {% endif %}
+                                </p>
+                            </div>
+
+                        </div> 
+                    </a>
+               
+                <div>
+                    <a href="{% url 'delete_wishlist' item.id %}" 
+                        onclick="event.stopPropagation();">
+                            <button class="btn">
+                                <i class="fa-solid fa-trash float-right"></i>
+                            </button>
+                        </a>
+                </div>
+                
+            </div>
+    
+            <hr>
+            {% endfor %}
+            
+        </div>
+    </div>
+</div>
+{% endblock %}

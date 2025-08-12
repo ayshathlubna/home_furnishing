@@ -10,11 +10,15 @@ from django.views.decorators.cache import never_cache
 from django.contrib import messages
 from django.contrib.auth.models import User
 from .models import Profile
+from cart_app.models import Cart_items,Wishlist
+from django.db.models import Sum
 
 # Create your views here.
 def home(request):
     user = User.objects.all()
-    return render(request,'user/home.html')
+    if request.user.is_authenticated:
+        total_items = Cart_items.objects.filter(cart__user=request.user).aggregate(Sum('quantity'))['quantity__sum'] or 0
+    return render(request,'user/home.html',locals())
 
 def group_items(lst, group_size):
     lst = list(lst)  # Convert QuerySet to list
@@ -262,6 +266,7 @@ from django.db.models import Case, When
 def product_page(request, id=None, sub_id=None):
     category = Category.objects.all()
     sub_cats = Sub_category.objects.all()
+    wishlist_ids = Wishlist.objects.filter(user=request.user).values_list('product_id', flat=True)
 
     selected_category = request.GET.get('category')
     

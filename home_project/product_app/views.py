@@ -3,6 +3,7 @@ from category_app.models import Category
 from sub_category_app.models import Sub_category
 from .models import Products, Product_image, Discount
 from django.contrib import messages
+from cart_app.models import Wishlist
 
 # Create your views here.
 def add_product(request):
@@ -181,6 +182,7 @@ def delete_discount(request,id):
 def product_details(request,id):
     product = Products.objects.get(p_id = id)
     product_image =Product_image.objects.filter(p_id=product)
+    wishlist_ids = Wishlist.objects.filter(user=request.user).values_list('product_id', flat=True)
     discount = Discount.objects.filter(product=product).first()
     product_images = []
     all_products = Products.objects.filter(sub_category = product.sub_category).exclude(p_id=product.p_id)[:4]
