@@ -1,0 +1,68 @@
+{% extends 'user/extend.html' %}
+ {% load static %}
+{% block 'title' %}Order Detail{% endblock %}
+
+{% block 'content' %}
+
+<div>
+    <div class="container mt-5">
+        <a href="{% url 'staff_order_list' %}" style="text-decoration :none;color:black;">< Back to Order List</a>
+        <div class="my-3">
+            <h2>Order ID : {{ order.order_id }}</h2>
+        </div>
+        <div class="d-flex justify-content-between">
+            <div>
+                <div style="margin-top: 20px;">
+                    <table class="table">
+                        <tr>
+                            <td><b>Customer:</b> </td>
+                            <td>{{ order.user.username }}</td>
+                        </tr>
+                        <tr>
+                            <td><b>Address:</b> </td>
+                            <td>{{order.address.name }} <br>
+                                {{order.address.address}} <br>
+                                {{order.address.pincode}} <br>
+                                {{order.address.contact_no}}
+
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><b>Payment Method:</b> </td>
+                            <td>{{ order.payment_method }}</td>
+                        </tr>
+                    </table>
+                </div>
+    
+                <div class="my-4">
+                    <h3 class="text-center">Order Items</h3>
+                    <table border="1" class="table mt-4">
+                        <tr>
+                            <th>Product</th>
+                            <th>Quantity</th>
+                            <th>Total</th>
+                        </tr>
+                        {% for item in items %}
+                        <tr>
+                            <td>{{ item.product }}</td>
+                            <td>{{ item.quantity }}</td>
+                            <td>{{ item.total_amount }}</td>
+                        </tr>
+                        {% endfor %}
+                    </table>
+                </div>
+            </div>
+            <div>
+                <h3>Update Status</h3>
+                <form method="post">
+                    {% csrf_token %}
+                    {{ form.as_p }}
+                    <button type="submit">Save Changes</button>
+                </form>
+            </div>
+
+
+        </div>
+    </div>
+</div>
+{% endblock %}

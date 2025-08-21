@@ -1,0 +1,85 @@
+{% extends 'user/extend.html' %}
+ {% load static %}
+
+{% block 'title' %}Payment Details {% endblock %}
+
+{% block 'content' %}
+<div>
+    <div>
+        <h4>Select Payment Mode</h4>
+<div class="d-flex">
+    <form action="{% url 'placed_order' %}" method="POST">
+        {% csrf_token %}
+    <div>
+        <input type="hidden" name="payment_method" id="payment_method">
+       
+            
+                <div>
+                    <!-- <input type="radio" name="cod_payment"> -->
+                <a href="javascript:void(0)" onclick="showPayment('cod','Cash on Delivery')">Cash on Delivery</a>
+                </div>
+         
+            
+                <div>
+                    <!-- <input type="radio" name="netbanking_payment"> -->
+                <a href="javascript:void(0)" onclick="showPayment('netbanking','NetBanking')">NetBanking</a>            
+                </div>
+
+            
+                <div>
+                    <!-- <input type="radio" name="upi_payment"> -->
+                <a href="javascript:void(0)" onclick="showPayment('upi','UPI Payment')">UPI payment</a>
+                </div>
+          
+           
+                <div>
+                     <!-- <input type="radio" name="wallet_payment"> -->
+                <a href="javascript:void(0)" onclick="showPayment('wallet','Wallet')">Wallet</a>
+                </div>
+       
+        <!-- </select> -->
+    </div>
+    <div>
+        <div id="cod" style="display: none;">
+            <h6>Cash on Delivery</h6>
+            <p>For safe, contactless and hassle-free delivery...</p>
+            
+            <button >Place Order</button>
+        </div>
+        <div id="netbanking" style="display: none;">
+            <h6>Net Banking</h6>
+            <p>Select Bank</p>
+            
+            <button>Pay {{cart.final_total}} Securely</button>
+        </div>
+        <div id="upi" style="display: none;">
+            <h6>UPI payment</h6>
+            <p>Enter your UPI ID</p>
+            
+            <button>Click to pay</button>
+        </div>
+        <div id="wallet" style="display: none;">
+            <h6>Wallet payment</h6>
+            <p>Choose your wallet</p>
+            
+            <button>Pay {{cart.final_total}} Securely</button>
+        </div>
+    </div>
+    </form>
+</div>
+
+<script>
+function showPayment(method, label) {
+    console.log(label)
+    // Hide all sections first
+    document.querySelectorAll('#cod, #netbanking, #upi, #wallet')
+        .forEach(div => div.style.display = 'none');
+    
+    // Show the selected section
+    document.getElementById(method).style.display = 'block';
+
+    document.getElementById('payment_method').value=label
+}
+</script>
+
+{% endblock %}

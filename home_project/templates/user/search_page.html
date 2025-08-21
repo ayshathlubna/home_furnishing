@@ -1,0 +1,65 @@
+{% extends 'user/extend.html' %}
+ {% load static %}
+
+{% block 'title' %}Search products{% endblock %}
+
+{% block 'content' %}
+<div class="container mt-5">
+
+  
+    <div class="d-flex align-items-center justify-content-center text-center" style="gap:100px;">
+        
+        <div>
+            <form action="" method="GET">
+                <h4>Search by Name</h4>
+                <input type="text" placeholder="Search product" value="{{query}}" name="q" style="width:300px;">
+            </form>
+        </div>
+        <div>
+            <h4>Search by Image</h4>
+            <button style="width:300px;text-align: center;">Upload your image</button>
+        </div>
+        
+    </div>
+    <div style="margin: 50px;">
+        <h4>
+            {% if query %}
+                Results for "{{ query }}"
+            {% else %}
+                Search Products
+            {% endif %}
+        </h4>
+
+        <div class="row">
+            
+            {% if query %}
+                {% for product in products %}
+                
+                    <div class="card my-2 mx-2 col-md-4 p-2" style="width: 18rem;">
+                        <div>
+                            <a href="{% url 'product_details' product.p_id %}" style="text-decoration: none; color: black;">
+                                {% if product.product_image_set.all %}
+                                    <img src="{{ product.product_image_set.first.image.url }}" width="100" class="img-fluid">
+                                {% endif %}
+                                <p>{{ product.p_name }}</p>
+                            </a>
+                        </div>
+                        <div>
+                            <a href="{% url 'add_to_cart' product.p_id %}">
+                                <button class="border rounded fs-6 bg-primary" >Add to cart</button>
+                            </a>
+                        </div>
+                    </div>
+                {% empty %}
+                    <p>No products found</p>
+                {% endfor %}
+            {% else %}
+                <p>Please enter a search term or upload an image to see results.</p>
+            {% endif %}
+            
+        </div>
+    </div>
+
+        
+</div>
+{% endblock %}

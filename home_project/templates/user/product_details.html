@@ -16,7 +16,7 @@
             <div class="carousel-inner">
                 {% for img in product_image %}
                 <div class="carousel-item {% if forloop.first %}active{% endif %}">
-                    <img src="{{ img.image.url }}" class="d-block w-100" alt="{{ product.p_name }}" style="height:400px; object-fit:cover; padding: 50px;">
+                    <img src="{{ img.image.url }}" class="d-block w-100" alt="{{ product.p_name }}" style="height:500px; padding: 50px;">
                 </div>
                 {% endfor %}
             </div>
@@ -51,11 +51,22 @@
                     <i class="fa-solid fa-cart-shopping me-3" id="cart"></i>Add to Cart
                 </button>
             </a>
-            <a href="{% url 'toggle_wishlist' product.p_id %}">
-                <button class="btn border" style="background-color: orange;width:300px;margin-top: 50px;font-weight: bold;"> 
-                    <i class="fa-solid fa-cart-shopping me-3" id="cart"></i>Add to Wishlist
-                </button>
-            </a>
+            {% if product.p_id in wishlist_ids %}
+    
+                <a href="{% url 'toggle_wishlist' product.p_id %}">
+                    <button class="btn border" style="background-color: orange; width:300px; margin-top: 50px; font-weight: bold;">
+                        <i class="fa-solid fa-trash me-3"></i>Remove from Wishlist
+                    </button>
+                </a>
+            {% else %}
+                
+                <a href="{% url 'toggle_wishlist' product.p_id %}">
+                    <button class="btn border" style="background-color: orange; width:300px; margin-top: 50px; font-weight: bold;">
+                        <i class="fa-solid fa-cart-shopping me-3"></i>Add to Wishlist
+                    </button>
+                </a>
+            {% endif %}
+
         </div>
     </div>
     <div>

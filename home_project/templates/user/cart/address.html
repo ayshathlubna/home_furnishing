@@ -19,9 +19,9 @@
             <div style="margin:30px">
                 <div style="line-height: 1px;">
                     <p>{{i.name}}</p>
-                    <p>{{i.address}}</p>
+                    <p style="line-height:15px;">{{i.address|linebreaksbr }}</p>
                     <p>{{i.pincode}}</p>
-                    <p>{{i.contact_no}}</p>
+                    <p style="margin-top:25px;">{{i.contact_no}}</p>
                 </div>
                 <div class="d-flex gap-3" >
                     <a href="{% url 'update_address' i.id %}" style="text-decoration: none;">Edit</a>
@@ -62,7 +62,7 @@
                         <label for="">
                             Address
                         </label>
-                        <input type="textarea" name="address">
+                        <textarea name="address"></textarea>
                         </div>
                         <div >
                         <label for="">

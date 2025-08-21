@@ -7,6 +7,7 @@ from product_app.models import Products
 
 class Cart(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
+    total_quantity = models.IntegerField(default=0)
     total_mrp = models.DecimalField(default=0,max_digits=10, decimal_places=2)
     total_discount = models.DecimalField(default=0,max_digits=10, decimal_places=2)
     shipping = models.IntegerField(default=0)

@@ -5,7 +5,8 @@
 
 {% block 'content' %}
 <div>
-    <form action="" method="POST">
+    <form action="{% url 'update_address' address.id %}" method="POST">
+        {% csrf_token %}
         <h4>Update Address</h4>
         <div>
             <div class="insert_id form-container">
@@ -18,7 +19,7 @@
             <label for="">
                 Address
             </label>
-            <input type="textarea" name="address" value ={{address.address}}>
+            <textarea name="address" > {{address.address}} </textarea>
             </div>
             <div class="insert_id form-container">
             <label for="">
@@ -32,8 +33,8 @@
             </label>
             <input type="text" name="contact_no" value ={{address.contact_no}}>
             </div>
-            <a href="{% url 'view_address' %}">Update
-            </a>
+            <button class="btn">Update
+            </button>
         </div>
 
     </form>

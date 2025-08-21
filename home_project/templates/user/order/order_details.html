@@ -1,0 +1,118 @@
+{% extends 'user/extend.html' %}
+ {% load static %}
+
+{% block 'title' %}My order{% endblock %}
+{% block 'content' %}
+
+<div class="container mt-5">
+<div style="background-color: lightgray;">
+    <div style="margin-left: 30px;padding-top: 10px;">
+        <a href="{% url 'orders' %}" style="text-decoration: none;color:black;"> < Back to orders</a>
+    </div>
+    
+    <div class="row">
+            <div class="col-lg-8" style="width:850px;background-color: white;padding: 20px;margin-top: 30px;margin-left: 20px;margin-bottom: 20px;">
+                <div >
+                    <h6>Order ID: {{ order.order_id }}</h6>
+                    <h6>Total items: {{ order.total_quantity }}</h6>
+                </div>
+
+                {% for i in order_items %}
+                    <div>                  
+                        {% if i.refund_status == "not_requested" %}
+                            <div class="d-flex">
+                                {{i.refund_status}}
+                                <p>Refund Amount:{{i.refund_amount}}</p>
+                            </div>
+                            <div>
+                                <p>Pickup from</p>
+                                <p>{{i.order.address.name}}</p>
+                                <p>{{i.order.address.address|linebreaksbr }}</p>
+                                <p>{{i.order.address.pincode}}</p>
+                                <p>{{i.order.address.contact_no}}</p>
+                            </div>
+                        {% else %}
+                            <div>
+                                <p>Shipping to <br>
+                                <b>{{i.order.address.name}}</b></p>
+                            </div>
+                        {% endif %}                   
+                                    
+                        <div style="line-height: 8px;margin-top: 10px;display: flex;gap: 10px;">
+
+                            {% if i.image %}
+                                <img src="{{ i.image.url }}" width="100">
+                            {% else %}
+                                <p>No image available</p>
+                            {% endif %}
+
+                            <div style="margin-top: 10px;">
+                                <p>{{ i.product.p_name }}</p>
+                                <p>Qty: {{i.quantity }}</p>
+                                <p>₹ {{i.amount}}</p>
+                                                                                                
+                            </div>
+                        </div>
+                        <hr style="color:lightgray;">
+                    </div>
+
+                {% endfor %}
+            </div>
+            <div class="col-lg-4 d-flex flex-column" style="margin-left: 10px;margin-top:10px;padding: 20px;gap:20px;">
+                <div style="background-color: white;padding: 20px;">
+                    <h4>Order Payment Details</h4>
+                    <hr>
+                    <h3 style="text-align: center; padding:20px">Total Bill : </h3>
+                    <table class="table">
+                        <tr>
+                            <td>Order Amount </td>
+                            <td> ₹{{ order.order_amount }} </td>
+                        </tr>
+                        <tr>
+                            <td>Order Savings </td> 
+                            <td>₹{{ order.order_savings }}</td>
+                        </tr>
+                        <tr>
+                            <td>Shipping Charge</td>  
+                            <td>₹{{ order.delivery_charge }} </td> 
+                        </tr>
+                        <tr>
+                            <td>Platform fee </td>
+                            <td> ₹{{ order.platform_fee }}</td>
+                        </tr>
+                    </table>
+                    
+                    <h5>Total ({{order.total_quantity}} items ) : ₹{{ order.total_amount }}</h5>
+                </div>
+                
+                
+                <div style="background-color: white;padding: 20px;">
+                    <h6>Payment Mode</h6>
+                    <div class="d-flex justify-content-between">
+                        <p>{{order.payment_method}}</p>
+                        <p>₹{{ order.total_amount }}</p>
+
+                    </div>
+                </div>     
+                
+                
+                <div style="background-color: white;padding: 20px;">
+                    <h6>Deliver to</h6>
+                    <div>
+                        {{order.address.name}}<br>
+                        {{order.address.address|linebreaksbr }}
+                        {{order.address.pincode}}<br>
+                        Phone : {{order.address.contact_no}}
+                    </div>
+                </div>  
+            
+            </div>
+        
+
+        </div>
+        
+    </div>
+</div>
+</div>
+
+{% endblock %}

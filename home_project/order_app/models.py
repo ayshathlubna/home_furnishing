@@ -10,6 +10,7 @@ class Order(models.Model):
     order_id = models.CharField(primary_key=True, max_length=50, default=uuid.uuid4, editable=False)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     address = models.ForeignKey(Address, on_delete=models.CASCADE)
+    total_quantity = models.IntegerField(default=0)
     order_amount = models.DecimalField(max_digits=10, decimal_places=2)
     order_savings = models.DecimalField(max_digits=10, decimal_places=2)
     delivery_charge = models.DecimalField(max_digits=10, decimal_places=2)
@@ -29,15 +30,17 @@ class Order(models.Model):
         ('Pending', 'Pending'),
         ('Refunded', 'Refunded')
     ]
-    payment_status = models.CharField(max_length=20, choices=payment_status_choices)
+    payment_status = models.CharField(max_length=20, choices=payment_status_choices,default='Pending')
 
     status_choices = [
-        ('pending', 'Pending'),
-        ('shipped', 'Shipped'),
-        ('delivered', 'Delivered'),
-        ('cancelled', 'Cancelled'),
+        ('Pending', 'Pending'),
+        ('Shipped', 'Shipped'),
+        ('Delivered', 'Delivered'),
+        ('Cancelled', 'Cancelled'),
+        ('Refunded','Refunded'),
+        ('Partially Refunded','Partially Refunded')
     ]
-    delivery_status = models.CharField(max_length=15, choices=status_choices, default='pending')
+    delivery_status = models.CharField(max_length=25, choices=status_choices, default='pending')
     order_date = models.DateField(auto_now_add=True)
     delivery_date = models.DateField(null=True, blank=True)
     refund_status_choices = [
@@ -57,6 +60,7 @@ class Order(models.Model):
 class Order_items(models.Model):
     order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name="items")
     product = models.ForeignKey(Products, on_delete=models.CASCADE)
+    image = models.ImageField(null=True)
     quantity = models.PositiveIntegerField(default=1)
     amount = models.DecimalField(max_digits=10, decimal_places=2)
     total_amount = models.DecimalField(max_digits=10, decimal_places=2)

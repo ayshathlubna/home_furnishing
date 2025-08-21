@@ -11,7 +11,13 @@ from django.contrib import messages
 from django.contrib.auth.models import User
 from .models import Profile
 from cart_app.models import Cart_items,Wishlist
-from django.db.models import Sum
+from django.db.models import Sum,Q
+from .forms import ImageSearchForm
+import numpy as np
+from tensorflow.keras.applications.resnet50 import ResNet50, preprocess_input
+from tensorflow.keras.preprocessing import image as keras_image
+from sklearn.metrics.pairwise import cosine_similarity
+
 
 # Create your views here.
 def home(request):
@@ -266,7 +272,12 @@ from django.db.models import Case, When
 def product_page(request, id=None, sub_id=None):
     category = Category.objects.all()
     sub_cats = Sub_category.objects.all()
-    wishlist_ids = Wishlist.objects.filter(user=request.user).values_list('product_id', flat=True)
+    wishlist_ids = list(
+        Wishlist.objects.filter(user=request.user)
+        .values_list('product_id', flat=True)
+    )
+
+   
 
     selected_category = request.GET.get('category')
     
@@ -425,3 +436,17 @@ def logout_profile(request):
     logout(request)
     return redirect('home')
 
+def search_page(request):
+    query = request.GET.get('q', '')  
+    products = Products.objects.all()
+    
+    if query:
+        products = products.filter(
+            Q(p_name__icontains=query) |
+            Q(description__icontains=query) |
+            Q(category__category_name__icontains=query) |
+            Q(sub_category__sub_cat_name__icontains=query) |
+            Q(brand__icontains=query) 
+        )
+       
+    return render(request,'user/search_page.html',locals())

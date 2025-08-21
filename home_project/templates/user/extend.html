@@ -17,7 +17,7 @@
   </head>
   <body  style="padding-top: 200px;">
 
-    <div class="container-fluid  mt-0 " >
+    
         <nav class="navbar navbar-expand-sm d-flex flex-column w-100 fixed-top top-0 start-0 p-0">
             <div class="container-fluid d-flex align-items-center justify-content-between" style="background-color: lightgray;">
 
@@ -25,13 +25,13 @@
                     <span class="navbar-toggler-icon"></span>
                 </button>
 
-                <a class="navbar-brand" href="">
+                <a class="navbar-brand" href="{% url 'home' %}">
                     <img style="width:180px; height:70px " src="{% static 'images\logo.png' %}" alt="Logo">
                 </a> 
         
                 <form action="">
                     {% csrf_token %}
-                    <input type="text" style="width:500px;height:50px ;padding:10px;" placeholder="What are you looking for ?">
+                    <input type="text" style="width:500px;height:50px ;padding:10px;" placeholder="What are you looking for ?" onclick="window.location.href='{% url 'search_page' %}'">
                 </form>
 
                 <div style="width:300px; display: flex; gap:10px; justify-content: flex-end;" >
@@ -44,11 +44,11 @@
                                 </a>
                                 <ul class="dropdown-menu" aria-labelledby="userDropdown">
                                     <li><a class="dropdown-item" href="{% url 'profile' %}">Profile</a></li>
-                                    <li><a class="dropdown-item" href="#">Orders</a></li>
+                                    <li><a class="dropdown-item" href="{% url 'orders' %}">Orders</a></li>
                                     <li><a class="dropdown-item" href="{% url 'view_address' %}">Address</a></li>
                                     <li><a class="dropdown-item" href="{% url 'logout' %}" onclick="return confirm('Are you sure you want to logout?');">Logout</a></li>
                                 </ul>
-                            </li>
+                        </li>
 
                     {% else %}
                         <a href="{% url 'signin' %}">
@@ -56,24 +56,16 @@
                         </a>
                     {% endif %}
                     <a href="{% url 'view_wishlist' %}">
-                    <button id="nav1">
-                        <span class="wishlist-container">
-                            <i class="fa-solid fa-heart"></i>
-                            <span class="wishlist-text">Wishlist</span>
-                        </span>
-                    </button>
+                        <button id="nav1">
+                            <span class="wishlist-container">
+                                <i class="fa-solid fa-heart text-danger"></i>
+                                <span class="wishlist-text">Wishlist</span>
+                            </span>
+                        </button>
                     </a>
                     <a href="{% url 'view_cart' %}">
                     <button id="nav1">
-                        <!-- <div id="class_container">
-                        <span class="cart-container">
-                            <i class="fa-solid fa-cart-shopping" id="cart"></i>
-                           {% if total_items > 0 %}
-                                <span class="cart-badge">{{ total_items }}</span>
-                            {% endif %}
-                            <span class="cart-text">Cart</span> 
-                        </span>
-                        </div> -->
+               
                         <div class="cart-containers">
                             <span class="cart-container">
                                 <i class="fa-solid fa-cart-shopping text-dark" id="cart"></i>
@@ -84,7 +76,7 @@
                             </span>
                         </div>
                     </button>
-                </a>
+                    </a>
                 </div>
                 
             </div>
@@ -225,8 +217,8 @@
                 </div>
             </div>
         </nav>
-        <hr>
-    </div>
+        
+    
 
     {% block 'content' %}
     {% endblock %}
@@ -336,4 +328,5 @@
 
     </footer>
   </body>
+  
   </html>

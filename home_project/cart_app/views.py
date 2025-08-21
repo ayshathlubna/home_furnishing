@@ -9,6 +9,7 @@ from decimal import Decimal
 @login_required
 def add_to_cart(request, product_id):
     product = Products.objects.get(p_id=product_id)
+    image_obj = Product_image.objects.filter(p_id=product.p_id).first()
     try:
         discount = Discount.objects.get(product=product)
         price = discount.discounted_price
@@ -21,12 +22,14 @@ def add_to_cart(request, product_id):
         cart=cart,
         user=request.user,
         product=product,
+        image = image_obj.image if image_obj else None,
         defaults={'price': price, 'quantity': 1, 'disc_percent': disc_percent, 'disc_price': price}
     )
 
     if not created:
         cart_item.quantity += 1
         cart_item.save()
+
 
     return redirect('view_cart')
 
@@ -92,15 +95,17 @@ def view_cart(request):
     platform_fee = Decimal(10)
     final_total = discounted_total + shipping + platform_fee
 
+    total_items = cart_items.aggregate(Sum('quantity'))['quantity__sum'] or 0
     # Store totals in cart object
     cart.total_mrp = total_mrp
     cart.total_discount = total_discount
     cart.shipping = shipping
     cart.platform_fee = platform_fee
     cart.final_total = final_total
+    cart.total_quantity = total_items
     cart.save()
 
-    total_items = cart_items.aggregate(Sum('quantity'))['quantity__sum'] or 0
+   
 
     context = {
         'cart_items': updated_cart,
@@ -185,12 +190,12 @@ def delete_address(request,id):
 
 def update_address(request,id):
     address = Address.objects.get(id=id, user=request.user)
-    print(address)
     if request.method == "POST":
         address.name = request.POST.get("name")
         address.address =request.POST.get("address")
         address.pincode = request.POST.get("pincode")
         address.contact_no = request.POST.get("contact_no")
+        print(address.name,address.address)
         address.save()
         return redirect('view_address')
     return render(request,'user/cart/update_address.html',locals())

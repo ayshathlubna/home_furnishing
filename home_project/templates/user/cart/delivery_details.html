@@ -54,7 +54,7 @@
             <h5>Total ({{total_items}} items ) : ₹{{ cart.final_total }}</h5>
             
             <div class="text-center m-5">
-                <a href="">
+                <a href="{% url 'placed_order' %}">
                     <button class="btn bg-warning text-light w-50" >Proceed to Payment</button>
                 </a>
             </div>
