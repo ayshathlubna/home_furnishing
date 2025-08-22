@@ -22,7 +22,7 @@ from django.conf import settings
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('',include('user_app.urls')),
-    path('admin/',include('admin_app.urls')),
+    path('admin_app/',include('admin_app.urls')),
     path('category/',include('category_app.urls')),
     path('sub_category/',include('sub_category_app.urls')),
     path('product/',include('product_app.urls')),
@@ -31,3 +31,5 @@ urlpatterns = [
     path('staff_dashboard/', include('staff_dashboard.urls')),
 
 ]+static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+handler404 = 'user_app.views.custom_404'

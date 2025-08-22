@@ -1,53 +1,28 @@
-.aboutus{
-    background-image: url('../images/home-aboutus.jpg');
-    height: 500px;
-    width: 100vw;
-    background-size: cover;
-    background-repeat: no-repeat;
-    background-position: center;
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    padding: 10px;
-    text-align: center;
-
-}
-.aboutus::before {
-    content: "";
-    position: absolute;
-    top: 0; left: 0;
-    height: 100%;
-    width: 100%;
-    background-image: url('../images/home-aboutus.jpg');
-    background-size: cover;
-    background-position: center;
-    filter: blur(8px);
-    z-index: 1;
-}
-.aboutus > * {
-    position: relative;
-    z-index: 2; 
-}
 
 .aboutus p{
-   width: 1300px;
-   font-size: 30px;
+    margin-top: 50px;
+   font-size: 22px;
    font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif
 }
 
 
 .aboutus #p2{
-   width: 1300px;
+   margin: auto;
    font-size: 30px;
    font-family: 'Courier New', Courier, monospace;
-   color: wheat;
+   color: brown;
+   margin-bottom: 50px;
+   margin-top: 50px;
 } 
 .aboutus h3{
-   width: 1000px;
-   font-size: 50px;
+
+   font-size: 40px;
    padding: 10px;
-   color: wheat;
+   color:brown;
    font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif
+}
+
+.aboutus img{
+    height:300px;
+    width: 600px;;
 }

@@ -64,6 +64,15 @@ class Order_items(models.Model):
     quantity = models.PositiveIntegerField(default=1)
     amount = models.DecimalField(max_digits=10, decimal_places=2)
     total_amount = models.DecimalField(max_digits=10, decimal_places=2)
+    status_choices = [
+        ('Pending', 'Pending'),
+        ('Shipped', 'Shipped'),
+        ('Delivered', 'Delivered'),
+        ('Cancelled', 'Cancelled'),
+        ('Refunded','Refunded'),
+        ('Partially Refunded','Partially Refunded')
+    ]
+    delivery_status = models.CharField(max_length=25, choices=status_choices, default='pending')
     refund_status_choices = [
         ('Not Requested', 'Not Requested'),
         ('Requested', 'Requested'),

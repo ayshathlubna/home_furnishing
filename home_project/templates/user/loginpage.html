@@ -1,9 +1,18 @@
 {% extends "user/extend.html" %}
 {% block 'title' %} Login Page {% endblock %}
+{% load static %}
 {% block 'content' %}
-    <div class="container w-50 bg-primary mt-5 px-5 py-5">      
-        <div class="container p-2 w-75 h-50 border rounded bg-light">
-    <form action="" method="POST">
+
+
+<!-- <style>
+    body {
+        background: url("{% static 'images/login_background.webp' %}") no-repeat center;
+        background-size: cover;
+    }
+</style> -->
+<div class="container-fluid mt-5 p-5" style='background: url("{% static 'images/login_background.webp' %}") no-repeat center center; background-size: cover;'>
+<div class="container w-50 h-50  my-5 p-5 border rounded bg-light">
+    <form action="{% url 'signin' %}" method="POST">
         {% csrf_token %}
 
   
@@ -20,23 +29,24 @@
             {% for i in messages %}
             <p>{{i}}</p>
             {% endfor %}
-            <div class="container d-flex justify-content-center">
-                <a href="{% url 'product_page' %}">
-                <button class="p-1 m-3 bg-primary text-light w-50 border none">
-                Login
-                </button>
-            </a>
+            <div class="container text-center">
+                <a href="">
+                    <button class="p-1 m-3 bg-dark text-light w-25 border-0">
+                    Login
+                    </button>
+                </a>
             </div>
-
-            
-        </form>
-        
-<div class="container text-center ">
+             </form>
+            <div class="container text-center ">
                 <p> Don't have an account? </p>
                 <a href="{% url 'signup' %}">
-                    <button class="p-1 m-3 bg-primary text-light w-50 border-0">
+                    <button class="p-1 m-3 bg-dark text-light w-25 border-0">
                         Sign Up
                     </button>
-                 </a>
-            </div></div>  </div>
+                </a>
+            </div>
+            
+       
+        </div>
+ </div>
 {% endblock %}

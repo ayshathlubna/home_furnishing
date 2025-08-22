@@ -5,6 +5,7 @@ from product_app.models import Products, Discount,Product_image
 from django.contrib.auth.decorators import login_required
 from django.db.models import F, Sum, ExpressionWrapper, DecimalField
 from decimal import Decimal
+from user_app.utils import weighted_hybrid_recommendations
 
 @login_required
 def add_to_cart(request, product_id):
@@ -113,7 +114,11 @@ def view_cart(request):
         'cart': cart
     }
 
-    return render(request, 'user/cart/cart.html', context)
+    recommended_ids = weighted_hybrid_recommendations(request, top_k=6)
+    print("recommended_ids",recommended_ids)
+    recommended_products = Products.objects.filter(p_id__in=recommended_ids)
+
+    return render(request, 'user/cart/cart.html', locals())
 
 
 def delete_item(request,id):

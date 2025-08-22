@@ -1,11 +1,12 @@
  {% extends "user/extend.html" %}
  {% block 'title' %} signup page {% endblock%}
+ {% load static %}
  {% block 'content' %}
     <form action="" method="POST">
       {% csrf_token %}
 
-      <div class="container w-50 bg-primary mt-3 px-5 py-5">
-        <div class="container p-2 w-75 h-50 border rounded bg-light">
+      <div class="container-fluid mt-5 p-5" style='background: url("{% static 'images/signup_background.jpg' %}") no-repeat center center; background-size: cover;'>
+        <div class="container p-4 w-50 h-50 border rounded bg-light">
           <h1 class="text-center mt-3 mb-4">Sign Up Form</h1>
           <div class="container d-flex flex-column w-75 p-1">
             <label for="">First Name</label>
@@ -41,14 +42,14 @@
           </div>
           <div class="container d-flex justify-content-center">
 
-            <button class="p-1 m-3 bg-primary text-light w-50 border none">
+            <button class="p-1 m-3 bg-dark text-light w-50 border none">
               Sign Up
             </button>
          </div>
           </form>
-            <div class="text-center">
+            <div class="text-center mb-5">
                 <p>Already have an account? click below</p>
-                <a href="{% url 'signin' %}"<button class="btn btn-primary w-50">
+                <a href="{% url 'signin' %}"<button class="btn btn-dark text-light w-50">
                 Login
                 </button></a>
             </div>

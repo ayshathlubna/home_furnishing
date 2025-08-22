@@ -4,17 +4,19 @@
 {% block 'title' %}Delivery Details {% endblock %}
 
 {% block 'content' %}
-<div class="container">
+<div class="container mt-5">
     <div class="d-flex">
         <div class="container">
             <div>
-                <i class="fa-solid fa-location-dot"></i>
-                Delivery Address
+            <div  class="d-flex gap-1">
+                <i class="fa-solid fa-location-dot fa-lg mt-3"></i>
+                <h3>Delivery Address</h3>
             </div>
-            <p>
+            <h5>
                 We will deliver your order here
-            </p>
-            <div style="line-height: 1px;">
+            </h5>
+            </div>
+            <div style="line-height: 1px;margin-top: 70px;">
                 {% if default_address %}
                 <p>hello</p>
                     <p>{{ default_address.address.name }}</p>

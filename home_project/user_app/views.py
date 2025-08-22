@@ -14,17 +14,56 @@ from cart_app.models import Cart_items,Wishlist
 from django.db.models import Sum,Q
 from .forms import ImageSearchForm
 import numpy as np
-from tensorflow.keras.applications.resnet50 import ResNet50, preprocess_input
+import faiss
+import pickle
+# from .utils.image_search import get_image_embedding,search_similar_images  # your utils
+import os
 from tensorflow.keras.preprocessing import image as keras_image
+from tensorflow.keras.applications.resnet50 import ResNet50, preprocess_input
+from io import BytesIO
 from sklearn.metrics.pairwise import cosine_similarity
+from .utils import weighted_hybrid_recommendations
 
+from django.shortcuts import render
+
+def custom_404(request, exception):
+    return render(request, 'user/404.html', status=404)
+
+model = ResNet50(weights='imagenet', include_top=False, pooling='avg')
+data = np.load("user_app/product_data.npy", allow_pickle=True).item()
+product_embeddings = np.array(data["embeddings"])
+product_ids = np.array(data["ids"])
+
+def get_image_embedding(img_file):
+    img_bytes = BytesIO(img_file.read())
+    img = keras_image.load_img(img_bytes, target_size=(224, 224))
+    x = keras_image.img_to_array(img)
+    x = np.expand_dims(x, axis=0)
+    x = preprocess_input(x)
+    return model.predict(x).flatten()
+
+# ------------------ IMAGE SEARCH FUNCTION ------------------
+def search_similar_images(query_embedding, embeddings, ids, top_k=5):
+    sims = cosine_similarity([query_embedding], embeddings)[0]
+    print("Top sims:", sims.max(), sims.min())
+    top_indices = sims.argsort()[-top_k:][::-1]
+    return list(ids[top_indices])
 
 # Create your views here.
+
 def home(request):
+    return render(request,'user/home.html',locals())
+
+def aboutus(request):
     user = User.objects.all()
     if request.user.is_authenticated:
         total_items = Cart_items.objects.filter(cart__user=request.user).aggregate(Sum('quantity'))['quantity__sum'] or 0
-    return render(request,'user/home.html',locals())
+
+        recommended_ids = weighted_hybrid_recommendations(request, top_k=6)
+        recommended_products = Products.objects.filter(p_id__in=recommended_ids)
+
+
+    return render(request,'user/aboutus.html',locals())
 
 def group_items(lst, group_size):
     lst = list(lst)  # Convert QuerySet to list
@@ -229,53 +268,19 @@ def group_sub_items(items, group_size):
     # Split into chunks of group_size
     return [extended_items[i:i + group_size] for i in range(0, len(extended_items), group_size)]
 
-# def product_page(request,id=None,sub_id=None):
-    
-#     category = Category.objects.all()
-#     sub_cats = Sub_category.objects.all()
-#     selected_category=request.GET.get('category') 
-#     print("aaa",selected_category)
-  
-#     order =request.GET.get('order') 
-
-#     if selected_category:
-#         sub_categories = Sub_category.objects.filter(category_id=selected_category)
-#         all_products = Products.objects.filter(sub_category__in=sub_categories)
-        
-#     else:
-#         sub_categories = Sub_category.objects.all()
-#         all_products = Products.objects.all()
-
-
-#     product_images = []
-#     if sub_id:
-#         all_products=Products.objects.filter(sub_category=sub_id)
-       
-#         # print(all_products)
-
-#     if order == 'asc':
-#         all_products = all_products.order_by('date')
-#     elif order == 'desc':
-#         all_products = all_products.order_by('-date')
-#     elif order == 'lowest':
-#         all_products = all_products.order_by('price')
-#     elif order == 'highest':
-#         all_products = all_products.order_by('-price')
-#     elif order == 'high_disc':
-#         discounted = Discount.objects.all().order_by('-disc_percent')
-#         product_ids = [disc.product.id for disc in discounted]
-#         preserved = Case(*[When(id=pid, then=pos) for pos, pid in enumerate(product_ids)])
-#         all_products = Products.objects.filter(id__in=product_ids).order_by(preserved)
 
 from django.db.models import Case, When
 
 def product_page(request, id=None, sub_id=None):
     category = Category.objects.all()
     sub_cats = Sub_category.objects.all()
-    wishlist_ids = list(
-        Wishlist.objects.filter(user=request.user)
-        .values_list('product_id', flat=True)
-    )
+    try:
+        wishlist_ids = list(
+            Wishlist.objects.filter(user=request.user)
+            .values_list('product_id', flat=True)
+        )
+    except:
+        pass
 
    
 
@@ -435,18 +440,77 @@ def profile_delete(request):
 def logout_profile(request):
     logout(request)
     return redirect('home')
+# def extract_features(img_input):
+#     """
+#     Accepts a file path (str) or Django InMemoryUploadedFile
+#     Returns flattened feature vector
+#     """
+
+#     if hasattr(img_input, 'read'):
+#         img_bytes = BytesIO(img_input.read())
+#         img = keras_image.load_img(img_bytes, target_size=(224, 224))
+#     else:
+#         img = keras_image.load_img(img_input, target_size=(224, 224))
+
+#     img_data = keras_image.img_to_array(img)
+#     img_data = np.expand_dims(img_data, axis=0)
+#     img_data = preprocess_input(img_data)
+#     features = model.predict(img_data)
+#     return features.flatten()
+
 
 def search_page(request):
-    query = request.GET.get('q', '')  
-    products = Products.objects.all()
-    
+    query = request.GET.get("q", "")
+    form = ImageSearchForm(request.POST or None, request.FILES or None)
+    products = Products.objects.none()  # default empty
+
+    # Initialize recent searches
+    if "recent_searches" not in request.session:
+        request.session["recent_searches"] = []
+
+    if request.GET.get("clear") == "1":
+        request.session.pop("recent_searches", None)
+        request.session.modified = True
+
+    # ------------------ TEXT SEARCH ------------------
     if query:
-        products = products.filter(
+        products = Products.objects.filter(
             Q(p_name__icontains=query) |
             Q(description__icontains=query) |
             Q(category__category_name__icontains=query) |
             Q(sub_category__sub_cat_name__icontains=query) |
-            Q(brand__icontains=query) 
+            Q(brand__icontains=query)
         )
-       
-    return render(request,'user/search_page.html',locals())
+
+        # Save text search in recent searches
+        first_image_url = None
+        if products.exists() and products.first().product_image_set.exists():
+            first_image_url = products.first().product_image_set.first().image.url
+
+        new_entry = {"text": query, "image": first_image_url}
+        recent_searches = request.session["recent_searches"]
+        if new_entry not in recent_searches:
+            recent_searches.insert(0, new_entry)
+            request.session["recent_searches"] = recent_searches[:10]
+            request.session.modified = True
+
+    # ------------------ IMAGE SEARCH ------------------
+    elif request.method == "POST" and form.is_valid():
+        uploaded_image = request.FILES.get("image")
+        print("Uploaded image:", uploaded_image)
+        if uploaded_image:
+            query_embedding = get_image_embedding(uploaded_image)
+            print("Query embedding shape:", query_embedding.shape)
+            similar_ids = search_similar_images(query_embedding, product_embeddings, product_ids, top_k=5)
+            similar_ids = list(set(similar_ids))
+            products = Products.objects.filter(p_id__in=similar_ids)
+            print("Similar IDs:", similar_ids)
+            print("Products found:", products)
+    recent_searches = request.session.get("recent_searches", [])[:10]
+
+    return render(request, "user/search_page.html", {
+        "query": query,
+        "products": products,
+        "recent_searches": recent_searches,
+        "form": form
+    })

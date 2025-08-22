@@ -16,6 +16,7 @@
             <th>Delivery Status</th>
             <th>Refund Status</th>
             <th>Order Date</th>
+            <th>Delivery Date</th>
             <th>Actions</th>
         </tr>
         {% for order in orders %}
@@ -26,6 +27,7 @@
             <td>{{ order.delivery_status }}</td>
             <td>{{ order.refund_status }}</td>
             <td>{{ order.order_date }}</td>
+            <td>{{ order.delivery_date }}</td>
             <td><a href="{% url 'staff_order_detail' order.order_id %}">View / Update</a></td>
         </tr>
         {% endfor %}

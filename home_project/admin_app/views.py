@@ -94,14 +94,14 @@ def user_update(request,id):
         user.save()
 
         user.profile.save()
-        return redirect('admin_page')
+        return redirect('admin_home')
     
     return render(request,"admin/user_update.html",locals())
 @login_required
 def user_delete(request,id):
     user=User.objects.get(id=id)
     user.delete()
-    return redirect('admin_page')
+    return redirect('admin_home')
 
 @login_required
 def status_update(request,id):

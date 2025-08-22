@@ -4,68 +4,63 @@
 {% block 'title' %}Payment Details {% endblock %}
 
 {% block 'content' %}
-<div>
-    <div>
-        <h4>Select Payment Mode</h4>
-<div class="d-flex">
+<div class="container  mt-5">
+
+    <h4>Select Payment Mode</h4>
     <form action="{% url 'placed_order' %}" method="POST">
-        {% csrf_token %}
-    <div>
-        <input type="hidden" name="payment_method" id="payment_method">
-       
-            
-                <div>
-                    <!-- <input type="radio" name="cod_payment"> -->
-                <a href="javascript:void(0)" onclick="showPayment('cod','Cash on Delivery')">Cash on Delivery</a>
+        <div class="d-flex mt-5 border w-50 p-2 justify-content-between">
+        
+        
+            {% csrf_token %}
+            <div>
+                <input type="hidden" name="payment_method" id="payment_method">
+                      
+                <div style="padding:5px;">
+                    <a href="javascript:void(0)" onclick="showPayment('cod','Cash on Delivery')" style="text-decoration:none;color:black">Cash on Delivery</a>
                 </div>
-         
-            
-                <div>
-                    <!-- <input type="radio" name="netbanking_payment"> -->
-                <a href="javascript:void(0)" onclick="showPayment('netbanking','NetBanking')">NetBanking</a>            
+                    
+                <div style="padding:5px;">                  
+                    <a href="javascript:void(0)" onclick="showPayment('netbanking','NetBanking')" style="text-decoration:none;color:black">NetBanking</a>            
                 </div>
 
-            
-                <div>
-                    <!-- <input type="radio" name="upi_payment"> -->
-                <a href="javascript:void(0)" onclick="showPayment('upi','UPI Payment')">UPI payment</a>
+                <div style="padding:5px;">
+                    <a href="javascript:void(0)" onclick="showPayment('upi','UPI Payment')" style="text-decoration:none;color:black">UPI payment</a>
                 </div>
-          
-           
-                <div>
-                     <!-- <input type="radio" name="wallet_payment"> -->
-                <a href="javascript:void(0)" onclick="showPayment('wallet','Wallet')">Wallet</a>
+                                
+                <div style="padding:5px;">
+                    <a href="javascript:void(0)" onclick="showPayment('wallet','Wallet')" style="text-decoration:none;color:black">Wallet</a>
                 </div>
-       
-        <!-- </select> -->
-    </div>
-    <div>
-        <div id="cod" style="display: none;">
-            <h6>Cash on Delivery</h6>
-            <p>For safe, contactless and hassle-free delivery...</p>
-            
-            <button >Place Order</button>
-        </div>
-        <div id="netbanking" style="display: none;">
-            <h6>Net Banking</h6>
-            <p>Select Bank</p>
-            
-            <button>Pay {{cart.final_total}} Securely</button>
-        </div>
-        <div id="upi" style="display: none;">
-            <h6>UPI payment</h6>
-            <p>Enter your UPI ID</p>
-            
-            <button>Click to pay</button>
-        </div>
-        <div id="wallet" style="display: none;">
-            <h6>Wallet payment</h6>
-            <p>Choose your wallet</p>
-            
-            <button>Pay {{cart.final_total}} Securely</button>
-        </div>
-    </div>
-    </form>
+
+            </div>
+            <div style="padding: 10px;;">
+                <div id="cod" style="display: none;">
+                    <h6>Cash on Delivery</h6>
+                    <p>For safe, contactless and <br>hassle-free delivery</p>
+                    
+                    <button >Place Order</button>
+                </div>
+                <div id="netbanking" style="display: none;">
+                    <h6>Net Banking</h6>
+                    <p>Select Bank</p>
+                    
+                    <button>Pay {{cart.final_total}} Securely</button>
+                </div>
+                <div id="upi" style="display: none;">
+                    <h6>UPI payment</h6>
+                    <p>Enter your UPI ID</p>
+                    
+                    <button>Click to pay</button>
+                </div>
+                <div id="wallet" style="display: none;">
+                    <h6>Wallet payment</h6>
+                    <p>Choose your wallet</p>
+                    
+                    <button>Pay {{cart.final_total}} Securely</button>
+                </div>
+            </div>
+             </div>
+        </form>
+   
 </div>
 
 <script>
