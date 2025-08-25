@@ -1,0 +1,62 @@
+{% extends 'admin/admin_extend.html' %}
+{% block 'title' %}Staff Users{% endblock %}
+{% block 'content' %}
+<div class="container">
+
+    <div class="d-flex justify-content-between mb-3">
+        <h2>Staff Lists</h2>
+        <a href="{% url 'new_staff' %}">
+            <button class="float-right">Add staff</button>
+        </a> 
+    </div>
+
+    <table class="table table-bordered table-striped">
+        <thead>
+            <th>ID</th>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Username</th>
+            <th>Email</th>
+            <th>Gender</th>
+            <th>Contact No</th>
+            <th>Address</th>
+            <th>Update</th>
+            <th>Delete</th>
+            <th>Status</th>
+        </thead>
+        <tbody>
+            {% for staff in staff %}
+            <tr>
+                <td>{{ staff.id }}</td>
+                <td>{{ staff.first_name }}</td>
+                <td>{{ staff.last_name }}</td>
+                <td>{{ staff.username }}</td>
+                <td>{{ staff.email }}</td>
+                <td>{{ staff.profile.gender }}</td>
+                <td>{{ staff.profile.mobile }}</td>
+                <td>{{ staff.profile.address }}</td>
+                <td>
+                    <a href="{% url 'user_update' staff.id %}">
+                        <button>Edit</button>
+                    </a>
+                </td>
+                <td>
+                    <a href="{% url 'user_delete' staff.id %}" onclick="return confirm('Are you sure?');">
+                        <button>Delete</button>
+                    </a>
+                </td>
+                <td>
+                    <a href="{% url 'status_update' staff.id %}">
+                        {% if staff.is_active %}
+                            <button>Active</button>
+                        {% else %}
+                            <button>Blocked</button>
+                        {% endif %}
+                    </a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

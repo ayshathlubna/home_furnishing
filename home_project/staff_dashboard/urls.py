@@ -2,6 +2,16 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
-    path('', views.order_list, name='staff_order_list'),
-    path('staff_order_detail/<str:order_id>/', views.staff_order_detail, name='staff_order_detail'),
+    # Staff Order List & Detail
+    path('order_list/', views.order_list, name='staff_order_list'),
+    path('orders/<str:order_id>/', views.staff_order_detail, name='staff_order_detail'),
+    path('',views.staff_dashboard,name="staff_dashboard"),
+
+    # Approve / Reject Cancel or Return Requests
+    path('orders/approve/<int:item_id>/', views.approve_request, name='approve_request'),
+    path('orders/reject/<int:item_id>/', views.reject_request, name='reject_request'),
+
+    path('cancellation_requests/', views.cancellation_requests, name='cancellation_requests'),
+    path('return_requests/', views.return_requests, name='return_requests'),
+
 ]

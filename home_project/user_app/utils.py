@@ -1,7 +1,8 @@
-# user_app/utils.py
 import numpy as np
 from sklearn.metrics.pairwise import cosine_similarity
 from product_app.models import Products
+from cart_app.models import Cart,Wishlist
+from order_app.models import Order  # if you track purchases
 
 # ------------------------------
 # Load product embeddings
@@ -37,14 +38,15 @@ def get_image_similarity(pid):
 # Category + Brand similarity
 # ------------------------------
 def get_category_brand_similarity(pid):
-    """Return similarity scores based on category & brand."""
-    try:
-        target = Products.objects.get(p_id=pid)
-    except Products.DoesNotExist:
-        return None
-
+    target = Products.objects.get(p_id=pid)
     sims = []
-    for p in Products.objects.all():
+    for db_pid in product_ids:  # loop over embeddings list
+        try:
+            p = Products.objects.get(p_id=db_pid)
+        except Products.DoesNotExist:
+            sims.append(0)
+            continue
+
         score = 0
         if p.category == target.category:
             score += 0.6
@@ -56,14 +58,73 @@ def get_category_brand_similarity(pid):
 
 
 # ------------------------------
+# User preference similarity
+# ------------------------------
+def get_user_preference_similarity(user):
+    """Return similarity scores based on user's wishlist, cart, orders."""
+    prefs = {}
+
+    # Wishlist (assuming it has FK to Products)
+    for w in Wishlist.objects.filter(user=user):
+        product = getattr(w, "product", None)
+        if not product and hasattr(w, "p_id"):
+            try:
+                product = Products.objects.get(p_id=w.p_id)
+            except Products.DoesNotExist:
+                continue
+        if product:
+            key = (product.category, product.brand)
+            prefs[key] = prefs.get(key, 0) + 1
+
+    # Cart
+    for c in Cart.objects.filter(user=user):
+        product = getattr(c, "product", None)
+        if not product and hasattr(c, "p_id"):
+            try:
+                product = Products.objects.get(p_id=c.p_id)
+            except Products.DoesNotExist:
+                continue
+        if product:
+            key = (product.category, product.brand)
+            prefs[key] = prefs.get(key, 0) + 2  # cart stronger weight
+
+    # Orders
+    for o in Order.objects.filter(user=user):
+        product = getattr(o, "product", None)
+        if not product and hasattr(o, "p_id"):
+            try:
+                product = Products.objects.get(p_id=o.p_id)
+            except Products.DoesNotExist:
+                continue
+        if product:
+            key = (product.category, product.brand)
+            prefs[key] = prefs.get(key, 0) + 3  # purchases = strongest
+
+    # Build vector over all products
+    sims = []
+    for db_pid in product_ids:
+        try:
+            p = Products.objects.get(p_id=db_pid)
+        except Products.DoesNotExist:
+            sims.append(0)
+            continue
+
+        sims.append(prefs.get((p.category, p.brand), 0))
+
+    return np.array(sims)
+
+
+# ------------------------------
 # Hybrid Recommendation
 # ------------------------------
-def weighted_hybrid_recommendations(request, top_k=6, w_image=0.5, w_catbrand=0.3, w_history=0.2):
+def weighted_hybrid_recommendations(request, top_k=6,
+                                    w_image=0.4, w_catbrand=0.2, w_history=0.2, w_user=0.2):
     """
     Generate hybrid recommendations using:
     1. Image similarity
     2. Category/Brand similarity
     3. User history (recency boost)
+    4. User preferences (wishlist/cart/orders)
     """
     history = request.session.get("history", [])
     scores = np.zeros(len(product_ids))
@@ -86,19 +147,23 @@ def weighted_hybrid_recommendations(request, top_k=6, w_image=0.5, w_catbrand=0.
         if idx is not None:
             scores[idx] += w_history * (1 - i / len(history))  # more recent = higher weight
 
-    # --- Exclude products already viewed/purchased ---
+    # --- 4. User preference signals ---
+    if request.user.is_authenticated:
+        user_sims = get_user_preference_similarity(request.user)
+        scores += w_user * user_sims
+
+    # --- Exclude already viewed ---
     history_indices = [get_product_index(pid) for pid in history if get_product_index(pid) is not None]
-    scores[history_indices] = 0
+    scores[history_indices] = -np.inf
 
     # --- Get top-k recommendations ---
-    # Get top-k indices
-    top_indices = scores.argsort()[::-1]   # sort all in descending order
-
-    # Map to product IDs and ensure uniqueness
-    seen = set()
+    top_indices = np.argsort(scores)[::-1]
     recommended_ids = []
+    seen = set()
     for i in top_indices:
-        pid = str(product_ids[i])  # ensure string
+        if i < 0 or i >= len(product_ids):
+            continue
+        pid = str(product_ids[i])
         if pid not in seen:
             seen.add(pid)
             recommended_ids.append(pid)

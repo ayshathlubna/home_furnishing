@@ -1,28 +1,68 @@
-
-.aboutus p{
-    margin-top: 50px;
-   font-size: 22px;
-   font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif
+.carousel-item {
+    position: relative; /* needed so child absolute positions work */
+    width:1500px;
+    height:500px;
+    
 }
 
-
-.aboutus #p2{
-   margin: auto;
-   font-size: 30px;
-   font-family: 'Courier New', Courier, monospace;
-   color: brown;
-   margin-bottom: 50px;
-   margin-top: 50px;
-} 
-.aboutus h3{
-
-   font-size: 40px;
-   padding: 10px;
-   color:brown;
-   font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif
+.carousel-item p {
+    position: absolute;
+    bottom: 20px;   /* distance from bottom */
+    left: 40px;     /* distance from left */
+    z-index: 3;
+    background-color: rgba(211, 211, 211, 0.8); /* lightgray with transparency */
+    color: black;
+    padding: 10px 20px;
+    font-size: 26px;
+    width:700px;
+    text-align:center;
+ 
+}
+.carousel-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;   /* fills area, crops if needed */
+    position: absolute;
+    top: 0;
+    left: 0;
 }
 
-.aboutus img{
-    height:300px;
-    width: 600px;;
+.carousel-item button{
+    background-color:black;
+    color:white;
+    border:None;
+    width:150px;
+    height:40px;
+    font-size:20px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+#carousel-details {
+    position: absolute;
+    top: 50px;  /* align with bottom */
+    right: 20px;   /* align to right */
+    z-index: 5;
+    background-color: rgba(0,0,0,0.6); 
+    color: white;
+    padding: 10px 20px;
+    border-radius: 8px;
+    text-align: center;
+    font-family: garamond;
+}
+
+#carousel-details h1{
+    margin-top: 20px;
+    font-family:papyrus;
+    font-size:50px;
+}
+
+#carousel-details h2{
+    font-size:30px;
+   
+}
+
+#carousel-details h3{
+    margin-top: 20px;
+    font-size:35px;
+    text-align:center;
 }

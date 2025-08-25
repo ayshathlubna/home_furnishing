@@ -143,7 +143,7 @@ def toggle_wishlist(request, product_id):
 @login_required
 def view_wishlist(request):
     wishlist_items = Wishlist.objects.filter(user=request.user).select_related('product')
-    
+    total_items = Decimal(0)
     for item in wishlist_items:
         product = item.product
         item.product_image = Product_image.objects.filter(p_id=item.product).first()
@@ -154,7 +154,7 @@ def view_wishlist(request):
         except Discount.DoesNotExist:
             item.disc_price = item.price
             item.disc_percent = Decimal(0)
-
+    if wishlist_items:
         total_items = wishlist_items.count()
     return render(request, 'user/cart/wishlist.html', {'wishlist_items': wishlist_items,'total_items':total_items})
 

@@ -189,10 +189,24 @@ def product_details(request,id):
     for p in all_products:
         image = Product_image.objects.filter(p_id=p).first()
         discount = Discount.objects.filter(product=p).first()
+         # maintain session history
+        
         product_images.append({
             'product_id': p,
             'image': image,
             'discount': discount
         })
+
+        # Store recently viewed products in session
+    recently_viewed = request.session.get('recently_viewed', [])
+    
+    if product.p_id not in recently_viewed:
+        recently_viewed.insert(0, product.p_id)  # add to the front
+        if len(recently_viewed) > 6:  # limit to last 6 products
+            recently_viewed.pop()
+    
+    request.session['recently_viewed'] = recently_viewed
+    print(" request.session['recently_viewed']", request.session['recently_viewed'])
+
     return render(request,'user/product_details.html',locals())
 

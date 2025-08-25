@@ -51,8 +51,36 @@ def search_similar_images(query_embedding, embeddings, ids, top_k=5):
 
 # Create your views here.
 
+ALLOWED_BRANDS = ["Homesake","Helios","Melody","Corsica","Tiffany","Vegas"]
 def home(request):
-    return render(request,'user/home.html',locals())
+    brand_products = {}
+    if request.user.is_authenticated:
+        total_items = Cart_items.objects.filter(cart__user=request.user).aggregate(Sum('quantity'))['quantity__sum'] or 0
+
+        recommended_ids = weighted_hybrid_recommendations(request, top_k=6)
+        recommended_products = Products.objects.filter(p_id__in=recommended_ids)
+
+    recently_viewed_ids = request.session.get('recently_viewed', [])
+    print("recently_viewed_ids",recently_viewed_ids)
+    if recently_viewed_ids:
+        recently_viewed_products = Products.objects.filter(p_id__in=recently_viewed_ids)
+        # Optional: preserve order from session
+        recently_viewed_products = sorted(
+            recently_viewed_products,
+            key=lambda x: recently_viewed_ids.index(x.p_id)
+        )
+
+    
+    for brand in ALLOWED_BRANDS:
+        product = Products.objects.filter(brand=brand).first()  # any product from that brand
+        if product:
+            product_image = Product_image.objects.filter(p_id=product.p_id).first()  # first image of that product
+            if product_image:
+                brand_products[brand] = product_image.image.url  # store brand → image URL
+
+    return render(request, "user/home.html", locals())
+
+
 
 def aboutus(request):
     user = User.objects.all()
@@ -271,50 +299,65 @@ def group_sub_items(items, group_size):
 
 from django.db.models import Case, When
 
-def product_page(request, id=None, sub_id=None):
+def product_page(request, id=None, sub_id=None, brand=None):
     category = Category.objects.all()
     sub_cats = Sub_category.objects.all()
+
     try:
         wishlist_ids = list(
             Wishlist.objects.filter(user=request.user)
             .values_list('product_id', flat=True)
         )
     except:
-        pass
-
-   
+        wishlist_ids = []
 
     selected_category = request.GET.get('category')
-    
     order = request.GET.get('order')
-    
+    if not brand:
+        brand = request.GET.get('brand')   # ✅ support query param brand
     all_products = Products.objects.all()
-    
+
     category_name = None
     subcategory_name = None
+    brand_name = None
 
-
-    # 1. If subcategory is selected from carousel/navbar
+    # 1. Subcategory filter
     if sub_id and sub_id != 'None':
         all_products = Products.objects.filter(sub_category=sub_id)
         try:
             sub_obj = Sub_category.objects.get(sub_cat_id=sub_id)
-            selected_category = sub_obj.category.category_id  # for keeping the filter selected
+            selected_category = sub_obj.category.category_id
             category_name = sub_obj.category.category_name
             subcategory_name = sub_obj.sub_cat_name
         except Sub_category.DoesNotExist:
             pass
 
-    # 2. If category is selected from dropdown
-    elif selected_category:
-        print('fgfg')
-        sub_categories = Sub_category.objects.filter(category_id=selected_category)
-        print(sub_categories)
-        all_products = Products.objects.filter(sub_category__in=sub_categories)
-        print(all_products)
-        category_name = Category.objects.get(category_id=selected_category).category_name
+    # 2. Category filter
+    if id and id != 'None':
+        all_products = all_products.filter(category_id=id)
+        try:
+            category_name = Category.objects.get(category_id=id).category_name
+        except Category.DoesNotExist:
+            pass
 
-    # 3. Sorting logic
+    # 3. Query param category filter
+    if selected_category:
+        sub_categories = Sub_category.objects.filter(category_id=selected_category)
+        all_products = all_products.filter(sub_category__in=sub_categories)
+        try:
+            category_name = Category.objects.get(category_id=selected_category).category_name
+        except Category.DoesNotExist:
+            pass
+
+    # 4. ✅ Brand filter (works with or without category/subcategory)
+    if brand and brand != 'None':
+        all_products = all_products.filter(brand__iexact=brand.strip())
+        brand_name = brand
+
+    print("Brand passed:", brand)
+    print("Filtered products count:", all_products.count())
+
+    # Sorting logic
     if order == 'asc':
         all_products = all_products.order_by('date')
     elif order == 'desc':
@@ -333,11 +376,26 @@ def product_page(request, id=None, sub_id=None):
         ])
         all_products = all_products.order_by(preserved)
 
+    
+    discount_filter = request.GET.get("discount")
+    if discount_filter == "min70":
+        all_products = all_products.filter(discount__disc_percent__gte=70)
+
+    elif discount_filter == "from50to70":
+        all_products = all_products.filter(discount__disc_percent__gte=50, discount__disc_percent__lte=70)
+
+    elif discount_filter == "upto50":
+        all_products = all_products.filter(discount__disc_percent__lte=50)
+
+    elif discount_filter == "under999":
+        all_products = all_products.filter(price__lte=999)
+
+
+    # collect product images + discounts
     product_images = []
     for product in all_products:
         image = Product_image.objects.filter(p_id=product).first()
         discount = Discount.objects.filter(product=product).first()
-        print(discount)
         product_images.append({
             'product_id': product,
             'image': image,
@@ -347,6 +405,9 @@ def product_page(request, id=None, sub_id=None):
     sub_cat_groups = group_items(sub_cats, 6)
 
     return render(request, 'user/product_page.html', locals())
+
+
+
 
 def signup(request):
     if request.method== "POST":

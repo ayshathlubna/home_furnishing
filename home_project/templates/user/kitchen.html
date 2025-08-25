@@ -7,7 +7,7 @@
 {% endblock 'style' %}
 {% block 'content' %}
 
-<div class="container-fluid">
+<div class="container-fluid mt-5">
     <div id="heading">   
         <h1>Kitchen</h1>
         <p>The Heart of Every Home Starts Here.</p>
@@ -21,7 +21,7 @@
         <div class="d-flex flex-column w-50" id="offer">
            <h3> Now Upto </h3>
            <h1> 50% off </h1>
-           <a href="{% url 'product_page' 'C006' %}">
+           <a href="{% url 'product_page' id='C006' %}">
            <button class="btn"> Shop Now</button>
            </a>
         </div>

@@ -8,6 +8,10 @@ from django.contrib.admin.views.decorators import staff_member_required
 from django.views.decorators.cache import never_cache
 from product_app.models import Products
 from category_app.models import Category
+from sub_category_app.models import Sub_category
+from order_app.models import Order
+from newsletter_app.models import NewsletterSubscriber
+from django.http import HttpResponseForbidden
 # Create your views here.
 
 def admin_home(request):
@@ -17,21 +21,47 @@ def admin_home(request):
 def dashboard(request):
 
     section = request.GET.get('section', 'default')
+    users = None
+    staff = None
+    products = None
+    category = None
+    sub_category = None
+    orders = None
+    subscribers = None
     selected_category = request.GET.get('category')
-    if section == 'user':
-        users = User.objects.all()
-    else:
-        users = None
 
     categories = Category.objects.all()
-    if section == "products":
+    if section == 'user':
+        users = User.objects.all()
+    elif section == 'products':
         if selected_category:
             products = Products.objects.filter(category__category_id=selected_category)
         else:
             products = Products.objects.all()
+    elif section == 'category':
+        category = Category.objects.all()
+    elif section == 'sub_category':
+        sub_category = Sub_category.objects.all()
+    elif section == 'orders':
+        orders = Order.objects.all()
+    elif section == 'newsletter':
+        subscribers = NewsletterSubscriber.objects.all()
+        print("subscribers",subscribers)
+    elif section == 'staff':
+        staff = User.objects.filter(is_staff=True)
 
+    context = {
+        "section": section,
+        "categories": categories,
+        "sub_categories":sub_category,
+        "users": users,
+        "products": products,
+        "orders": orders,
+        "subscribers": subscribers,
+        "staff": staff,
+    }
 
-    return render(request, 'admin/dashboard.html', locals())
+    return render(request, 'admin/dashboard.html', context)
 
 
 
@@ -41,10 +71,13 @@ def userlist(request):
     users = User.objects.all()
     return render(request,'admin/userlists.html',locals())
 
-@login_required
-def new_user(request):
-    gender=Profile.gender_choice
-    if request.method =="POST":
+def new_staff(request):
+    if not request.user.is_superuser:
+        return HttpResponseForbidden("Not authorized")
+
+    gender_choices = Profile.gender_choice
+
+    if request.method == "POST":
         first = request.POST.get("first_name")
         last = request.POST.get("last_name")
         username = request.POST.get("username")
@@ -54,23 +87,47 @@ def new_user(request):
         email = request.POST.get("email")
         contact_no = request.POST.get("contact_no")
         address = request.POST.get("address")
+        profile_pic = request.FILES.get("profile")
 
-        users=User.objects.filter(username=username).values()
-        if users:
-            messages.error(request,"Username already exists")
-        
-        if confirm_password==password:
-            user = User.objects.create(first_name = first, last_name=last, username = username,email=email)
-            user.set_password(password)
-            profile =Profile.objects.create(user=user,gender=gender, mobile=contact_no,address=address)
-            user.save()
-            profile.save()
-            return redirect('admin_page')
-    return render(request,'admin/new_user.html',locals())
+        if User.objects.filter(username=username).exists():
+            messages.error(request, "Username already exists")
+        elif password != confirm_password:
+            messages.error(request, "Passwords do not match")
+        else:
+            user = User.objects.create_user(
+                username=username,
+                first_name=first,
+                last_name=last,
+                email=email,
+                password=password,
+                is_staff=True  # mark as staff
+            )
+            profile = Profile.objects.create(
+                user=user,
+                gender=gender,
+                phone=contact_no,
+                address=address,
+                profile_img=profile_pic
+            )
+            messages.success(request, "Staff user created successfully")
+            return redirect('dashboard')
 
-# def getuser(request,id):
-#     user = User.objects.get(id=id)
-#     return redirect('user_update',user.id)
+    return render(request, 'admin/new_staff.html', {"gender": gender_choices})
+
+@login_required
+def staff_list(request):
+    if not request.user.is_staff:
+        return HttpResponseForbidden("Not authorized")
+    
+    # Get only users who are staff
+    staff_users = User.objects.filter(is_staff=True).order_by('id')
+  
+    context = {
+        "staff_users": staff_users
+    }
+    return render(request, 'admin/staff_list.html', context)
+
+
 @login_required
 def user_update(request,id):
     gender=Profile.gender_choice
@@ -94,14 +151,14 @@ def user_update(request,id):
         user.save()
 
         user.profile.save()
-        return redirect('admin_home')
+        return redirect('dashboard')
     
     return render(request,"admin/user_update.html",locals())
 @login_required
 def user_delete(request,id):
     user=User.objects.get(id=id)
     user.delete()
-    return redirect('admin_home')
+    return redirect('dashboard')
 
 @login_required
 def status_update(request,id):
@@ -111,5 +168,17 @@ def status_update(request,id):
     else:
         user.is_active=True
     user.save()
-    return redirect('admin_page')
+    return redirect('dashboard')
 
+@login_required
+def staff_list(request):
+    if not request.user.is_staff:
+        return HttpResponseForbidden("Not authorized")
+    
+    # Get only users who are staff
+    staff_users = User.objects.filter(is_staff=True).order_by('id')
+
+    context = {
+        "staff_users": staff_users
+    }
+    return render(request, 'admin/staff_list.html', context)

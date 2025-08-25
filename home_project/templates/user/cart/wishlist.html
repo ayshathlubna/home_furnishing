@@ -1,11 +1,12 @@
 {% extends 'user/extend.html' %}
  {% load static %}
-{% block 'title' %}My Cart{% endblock %}
+{% block 'title' %}My Wishlist{% endblock %}
 
 {% block 'content' %}
 
-<div class="container">
+<div class="container mt-5">
     <div>
+        {% if wishlist_items %}
         <h3 style="margin:20px 30px;">My wishlist ({{total_items}})</h3>
         <div style="margin: 30px;" >
             {% for item in wishlist_items %}          
@@ -64,6 +65,12 @@
             {% endfor %}
             
         </div>
+    {% else %}
+        <div>
+            <h3 style="margin:20px 30px;">My wishlist</h3>
+            <h2 style="margin-top:60px;margin-bottom:60px; text-align: center;">No wishlist added </h2>
+        </div>
+    {% endif %}
     </div>
 </div>
 {% endblock %}

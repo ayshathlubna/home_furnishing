@@ -1,44 +1,45 @@
+/* Carousel buttons positioning */
 .carousel-control-prev,
 .carousel-control-next {
-  top: 50%;
+  top: 50%; /* vertical center */
   transform: translateY(-50%);
-  width: auto;
-  background-color:red;
-  color: blue;
-  padding: 1px;
+  width: 40px;
+  height: 40px;
+  background-color: red; /* button color */
   border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   opacity: 1;
+  z-index: 10; /* ensure it stays above images */
 }
 
+/* Adjust distance from carousel edges */
 .carousel-control-prev {
-  left: -100px; /* Adjust to move further outside */
+  left: -50px; /* closer to left image edge */
 }
 
 .carousel-control-next {
-  right: -200px;
+  right: 5px; /* closer to right image edge */
 }
 
+/* Remove default Bootstrap icon */
 .carousel-control-prev-icon,
 .carousel-control-next-icon {
-  background-image: red;
-  color: black;
-}
-
-.carousel-control-prev-icon::after,
-.carousel-control-next-icon::after {
+  background: none;
   font-size: 24px;
-  font-weight: bold;
   color: black;
 }
 
+/* Add custom arrows */
 .carousel-control-prev-icon::after {
-  content: '‹';
-  font-size: 20px;
+  content: '‹'; 
 }
 
 .carousel-control-next-icon::after {
   content: '›';
 }
+
 
 #multiItemCarousel{
     width: 100%;
