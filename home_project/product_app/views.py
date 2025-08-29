@@ -4,6 +4,8 @@ from sub_category_app.models import Sub_category
 from .models import Products, Product_image, Discount
 from django.contrib import messages
 from cart_app.models import Wishlist
+from user_app.models import RecentlyViewed
+from django.utils import timezone
 
 # Create your views here.
 def add_product(request):
@@ -198,15 +200,19 @@ def product_details(request,id):
         })
 
         # Store recently viewed products in session
-    recently_viewed = request.session.get('recently_viewed', [])
-    
-    if product.p_id not in recently_viewed:
-        recently_viewed.insert(0, product.p_id)  # add to the front
-        if len(recently_viewed) > 6:  # limit to last 6 products
-            recently_viewed.pop()
-    
-    request.session['recently_viewed'] = recently_viewed
-    print(" request.session['recently_viewed']", request.session['recently_viewed'])
+    if request.user.is_authenticated:
+        # Save or update record
+        RecentlyViewed.objects.update_or_create(
+            user=request.user,
+            product=product,
+            defaults={'viewed_at': timezone.now()}
+        )
+
+        # Keep only last 8
+        viewed = RecentlyViewed.objects.filter(user=request.user).order_by('-viewed_at')
+        if viewed.count() > 8:
+            for old in viewed[8:]:
+                old.delete()
 
     return render(request,'user/product_details.html',locals())
 

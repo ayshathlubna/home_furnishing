@@ -22,3 +22,11 @@ class UserHistory(models.Model):
         ordering = ["-viewed_at"]  # latest first
 
 
+class RecentlyViewed(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    product = models.ForeignKey(Products, on_delete=models.CASCADE)
+    viewed_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ['-viewed_at']
+        unique_together = ('user', 'product')  # Avoid duplicates
