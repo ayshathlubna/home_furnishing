@@ -1,0 +1,52 @@
+<div class="container mt-5">
+    <h2>Pending Cancellation & Return Requests</h2>
+
+    {% if requests %}
+    <div class="table-responsive mt-3">
+        <table class="table table-bordered">
+            <thead class="thead-light">
+                <tr>
+                    <th>#</th>
+                    <th>Order ID</th>
+                    <th>Product</th>
+                    <th>Quantity</th>
+                    <th>Request Type</th>
+                    <th>Request Date</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in requests %}
+                <tr>
+                    <td>{{ forloop.counter }}</td>
+                    <td>
+                        <a href="{% url 'staff_order_detail' item.order.order_id %}">
+                            {{ item.order.order_id }}
+                        </a>
+                    </td>
+                    <td>{{ item.product.p_name }}</td>
+                    <td>{{ item.quantity }}</td>
+                    <td>
+                        {% if item.refund_status == "cancellation_requested" %}
+                            Cancellation
+                        {% elif item.refund_status == "return_requested" %}
+                            Return
+                        {% endif %}
+                    </td>
+                    <td>{{ item.order.order_date|date:"d M Y" }}</td>
+                    <td>
+                        <a href="{% url 'staff_order_detail' item.order.order_id %}" class="btn btn-primary btn-sm">
+                            Process
+                        </a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <div class="alert alert-info mt-4">
+        No pending cancellation or return requests.
+    </div>
+    {% endif %}
+</div>

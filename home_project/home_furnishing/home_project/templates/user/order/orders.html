@@ -1,0 +1,51 @@
+{% extends 'user/extend.html' %}
+{% load static %}
+
+{% block 'title' %}My Orders{% endblock %}
+{% block 'content' %}
+
+<div class="container mt-5">
+    <h3>My Orders</h3>
+
+    {% if messages %}
+        {% for message in messages %}
+            <p style="color:red;">{{ message }}</p>
+        {% endfor %}
+    {% endif %}
+
+    {% for order in orders %}
+    <div style="border:1px solid #ccc; padding:15px; margin-top:10px;">
+        <a href="{% url 'order_details' order.order_id %}" style="text-decoration:none; color:black;">
+            <h6>Order ID: {{ order.order_id }}</h6>
+            <h6>Total items: {{ order.total_quantity }}</h6>
+        </a>
+
+        {% for item in order.items.all %}
+        <div style="display:flex; gap:10px; margin-top:10px;">
+            {% if item.image %}
+                <img src="{{ item.image.url }}" width="100">
+            {% else %}
+                <p>No image available</p>
+            {% endif %}
+            <div>
+                <p>{{ item.product.p_name }}</p>
+                <p>Qty: {{ item.quantity }}</p>
+                <p>Price: ₹{{ item.amount }}</p>
+                <p>Delivery Status: {{ item.delivery_status }}</p>
+                {% if item.delivery_status == "Delivered" %}
+                    <p>Delivered on: {{ item.order.delivery_date }}</p>
+                {% endif %}
+                {% if item.refund_status == "Completed" %}
+                    <p><b>Refunded</b>: ₹{{ item.refund_amount }}</p>
+                {% endif %}
+            </div>
+        </div>
+        <hr>
+        {% endfor %}
+    </div>
+    {% empty %}
+    <p>No orders created yet.</p>
+    {% endfor %}
+</div>
+
+{% endblock %}

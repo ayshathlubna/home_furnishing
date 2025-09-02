@@ -1,0 +1,28 @@
+
+.aboutus p{
+    margin-top: 50px;
+   font-size: 22px;
+   font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif
+}
+
+
+.aboutus #p2{
+   margin: auto;
+   font-size: 30px;
+   font-family: 'Courier New', Courier, monospace;
+   color: brown;
+   margin-bottom: 50px;
+   margin-top: 50px;
+} 
+.aboutus h3{
+
+   font-size: 40px;
+   padding: 10px;
+   color:brown;
+   font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif
+}
+
+.aboutus img{
+    height:300px;
+    width: 600px;;
+}

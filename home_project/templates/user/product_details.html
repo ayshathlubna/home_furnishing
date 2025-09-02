@@ -1,0 +1,139 @@
+{% extends 'user/extend.html' %}
+{% load static %}
+
+{% block 'title' %} Product Details {% endblock %}
+
+{% block 'style' %}
+<link rel="stylesheet" href="{% static 'css/display.css' %}">
+<style>
+/* Ensure carousel images fit nicely */
+.carousel-item img {
+    object-fit: contain;
+    max-height: 500px;
+    width: 100%;
+}
+
+/* Responsive buttons */
+.product-btn {
+    min-width: 150px;
+}
+
+@media (max-width: 768px) {
+    .product-info {
+        margin-top: 20px;
+    }
+    .product-btn {
+        width: 100%;
+        margin-top: 10px !important;
+    }
+}
+</style>
+{% endblock %}
+
+{% block 'content' %}
+<div class="container my-4">
+    <div class="row g-4 align-items-start my-4">
+
+        <!-- Carousel -->
+        <div class="col-lg-6 col-md-12">
+            <div id="productCarousel" class="carousel slide" data-bs-ride="carousel">
+                <div class="carousel-inner">
+                    {% for img in product_image %}
+                    <div class="carousel-item {% if forloop.first %}active{% endif %}">
+                        <img src="{{ img.image.url }}" class="d-block img-fluid" alt="{{ product.p_name }}">
+                    </div>
+                    {% endfor %}
+                </div>
+
+                <button class="carousel-control-prev" type="button" data-bs-target="#productCarousel" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon"></span>
+                    <span class="visually-hidden">Previous</span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#productCarousel" data-bs-slide="next">
+                    <span class="carousel-control-next-icon"></span>
+                    <span class="visually-hidden">Next</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Product Info -->
+        <div class="col-lg-6 col-md-12 product-info">
+            <h3>{{ product.p_name }}</h3>
+
+            {% if discount %}
+                <h4 class="text-danger text-decoration-line-through">₹{{ product.price }}</h4>
+                <h2>₹{{ discount.discounted_price }}</h2>
+                <p>You save ₹{{discount.disc_price}} ({{ discount.disc_percent|floatformat:0 }}% OFF)</p>
+            {% else %}
+                <h2 class="fw-bold my-3">₹{{ product.price }}</h2>
+            {% endif %}
+
+            <!-- Buttons -->
+            <div class="d-flex flex-wrap gap-2">
+                <a href="{% url 'add_to_cart' product.p_id %}">
+                    <button class="btn btn-warning product-btn">
+                        <i class="fa-solid fa-cart-shopping me-2"></i>Add to Cart
+                    </button>
+                </a>
+
+                {% if product.p_id in wishlist_ids %}
+                <a href="{% url 'toggle_wishlist' product.p_id %}">
+                    <button class="btn btn-outline-danger product-btn">
+                        <i class="fa-solid fa-trash me-2"></i>Remove from Wishlist
+                    </button>
+                </a>
+                {% else %}
+                <a href="{% url 'toggle_wishlist' product.p_id %}">
+                    <button class="btn btn-outline-danger product-btn">
+                        <i class="fa-solid fa-heart me-2"></i>Add to Wishlist
+                    </button>
+                </a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Product Details Table -->
+    <div class="my-3">
+        <h4>Product Details</h4>
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <tr><td>Product Name</td><td>: {{product.p_name}}</td></tr>
+                <tr><td>Color</td><td>: {{product.color}}</td></tr>
+                <tr><td>Brand</td><td>: {{product.brand}}</td></tr>
+                <tr><td>Category</td><td>: {{product.category}}</td></tr>
+                <tr><td>Description</td><td>: {{product.description}}</td></tr>
+                <tr><td>Warranty</td><td>: {{product.warranty}}</td></tr>
+            </table>
+        </div>
+    </div>
+
+    <!-- Similar Products -->
+    <div class="my-3">
+        <h4 class="mb-3 text-center">Similar Products</h4>
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-3">
+            {% for i in product_images %}
+            <div class="col">
+                <div class="card h-100">
+                    <a href="{% url 'product_details' i.product_id.p_id %}" class="text-decoration-none text-dark">
+                        <img src="{{ i.image.image.url }}" class="card-img-top img-fluid" alt="{{ i.product_id.p_name }}">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                {% if i.discount.discounted_price %}
+                                    <span class="text-decoration-line-through text-muted">₹{{i.product_id.price}}</span>
+                                    <span>₹{{i.discount.discounted_price}}</span>
+                                {% else %}
+                                    <span>₹{{i.product_id.price}}</span>
+                                {% endif %}
+                            </div>
+                            <h6 class="card-title">{{ i.product_id.p_name }}</h6>
+                        </div>
+                    </a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+</div>
+{% endblock %}

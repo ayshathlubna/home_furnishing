@@ -1,0 +1,84 @@
+{% extends 'user/extend.html' %}
+{% load static %}
+
+{% block 'title' %}Payment Details{% endblock %}
+
+{% block 'content' %}
+<div class="container mt-5">
+
+    <h4 class="mb-4">Select Payment Mode</h4>
+
+    <form action="{% url 'placed_order' %}" method="POST">
+        {% csrf_token %}
+        <input type="hidden" name="payment_method" id="payment_method">
+
+        <div class="row g-3">
+
+            <!-- Payment Options -->
+            <div class="col-lg-4 col-12">
+                <div class="list-group">
+                    <a href="javascript:void(0)" onclick="showPayment('cod','Cash on Delivery')" class="list-group-item list-group-item-action">
+                        Cash on Delivery
+                    </a>
+                    <a href="javascript:void(0)" onclick="showPayment('netbanking','NetBanking')" class="list-group-item list-group-item-action">
+                        NetBanking
+                    </a>
+                    <a href="javascript:void(0)" onclick="showPayment('upi','UPI Payment')" class="list-group-item list-group-item-action">
+                        UPI Payment
+                    </a>
+                    <a href="javascript:void(0)" onclick="showPayment('wallet','Wallet')" class="list-group-item list-group-item-action">
+                        Wallet
+                    </a>
+                </div>
+            </div>
+
+            <!-- Payment Details -->
+            <div class="col-lg-8 col-12">
+                <div class="card p-3 h-100">
+
+                    <div id="cod" class="payment-detail" style="display: none;">
+                        <h6>Cash on Delivery</h6>
+                        <p>For safe, contactless and hassle-free delivery</p>
+                        <button type="submit" class="btn btn-warning">Place Order</button>
+                    </div>
+
+                    <div id="netbanking" class="payment-detail" style="display: none;">
+                        <h6>Net Banking</h6>
+                        <p>Select Bank</p>
+                        <button type="submit" class="btn btn-success">Pay ₹{{ cart.final_total }} Securely</button>
+                    </div>
+
+                    <div id="upi" class="payment-detail" style="display: none;">
+                        <h6>UPI Payment</h6>
+                        <p>Enter your UPI ID</p>
+                        <button type="submit" class="btn btn-primary">Click to Pay</button>
+                    </div>
+
+                    <div id="wallet" class="payment-detail" style="display: none;">
+                        <h6>Wallet Payment</h6>
+                        <p>Choose your wallet</p>
+                        <button type="submit" class="btn btn-info">Pay ₹{{ cart.final_total }} Securely</button>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </form>
+
+</div>
+
+<script>
+function showPayment(method, label) {
+    // Hide all sections first
+    document.querySelectorAll('.payment-detail').forEach(div => div.style.display = 'none');
+    
+    // Show the selected section
+    document.getElementById(method).style.display = 'block';
+
+    // Set hidden input value
+    document.getElementById('payment_method').value = label;
+}
+</script>
+
+{% endblock %}

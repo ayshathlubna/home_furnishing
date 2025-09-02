@@ -1,0 +1,55 @@
+{% extends 'user/extend.html' %}
+{% block 'title'%} Izyaansh Home Furnshing {% endblock %}
+{% load static %}
+
+{% block 'content' %}
+
+<link rel="stylesheet" href="{% static 'css/aboutus.css' %}">
+
+<div class="container-fluid mt-5 aboutus text-center" id="aboutus">
+    <h3 class="text-center">About us</h3>
+    <div class="row" style="background-color: antiquewhite;">
+        <div class="col-md-6" >
+            <img src="{% static "images/home-aboutus.jpg" %}" alt="">
+            
+        </div>
+        <div class="container-fluid aboutus col-md-6" >
+
+            
+            <p>Izyaansh Living is more than a home furnishing brand — it's a tribute to comfort, elegance, and family.
+                Izyaansh reflects the warmth of a home and the beauty of togetherness.
+
+                We believe that every home tells a story, and our carefully curated furniture, décor, and lifestyle products are designed to be a part of yours. Whether you're looking for timeless classics, modern accents, or cozy essentials, Izyaansh Living helps you transform your space into a place of peace, personality, and style.
+            </p>   
+            
+        </div>
+       
+    </div>
+    <p id="p2">✨ Crafted with care. Styled with love. ✨ </p>
+</div>
+    <div class="container">
+        <h4>Recommended for you</h4>
+        <div class="row">
+            
+            {% for product in recommended_products %}
+            <div class="col-md-2 my-2 ">
+            <a href="{% url 'product_details' product.p_id %}" style="text-decoration: none;color: black;">
+            <div class="card p-2 h-100">
+                
+                {% if product.product_image_set.first %}
+                    <img src="{{ product.product_image_set.first.image.url }}" class="h-75">
+                {% endif %}
+                <p>{{ product.p_name }}</p>
+             </div>    
+           
+            </a> 
+           </div>
+           
+            {% endfor %}
+        </div>
+    </div>
+
+
+    </div>
+
+{% endblock %}

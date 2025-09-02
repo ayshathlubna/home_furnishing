@@ -1,0 +1,2 @@
+
+web: gunicorn home_project.home_project.wsgi:application --bind 0.0.0.0:$PORT

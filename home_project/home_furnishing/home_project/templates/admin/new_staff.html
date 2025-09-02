@@ -1,0 +1,71 @@
+{% extends 'admin/admin_extend.html' %}
+{% block 'title' %} Create New User {% endblock %}
+{% block 'content' %}
+
+<div class="container d-flex justify-content-center mt-5">
+    <div class="card p-5" style="width: 500px; background-color: bisque;">
+        <h2 class="text-center mb-4">Create New staff</h2>
+
+        <form action="" method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+
+            <div class="mb-2">
+                <label for="first_name">First Name</label>
+                <input type="text" name="first_name" id="first_name" class="form-control" required>
+            </div>
+
+            <div class="mb-2">
+                <label for="last_name">Last Name</label>
+                <input type="text" name="last_name" id="last_name" class="form-control" required>
+            </div>
+
+            <div class="mb-2">
+                <label for="username">Username</label>
+                <input type="text" name="username" id="username" class="form-control" required>
+            </div>
+
+            <div class="mb-2">
+                <label for="email">Email</label>
+                <input type="email" name="email" id="email" class="form-control" required>
+            </div>
+
+            <div class="mb-2">
+                <label for="password">Password</label>
+                <input type="password" name="password" id="password" class="form-control" required>
+            </div>
+
+            <div class="mb-2">
+                <label for="confirm_password">Confirm Password</label>
+                <input type="password" name="confirm_password" id="confirm_password" class="form-control" required>
+            </div>
+
+            <div class="mb-2">
+                <label for="gender">Gender</label>
+                <select name="gender" id="gender" class="form-select" required>
+                    {% for key, value in gender %}
+                        <option value="{{ value }}">{{ key }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="mb-2">
+                <label for="contact_no">Contact No</label>
+                <input type="text" name="contact_no" id="contact_no" class="form-control" required>
+            </div>
+
+            <div class="mb-2">
+                <label for="address">Address</label>
+                <textarea name="address" id="address" class="form-control" rows="2"></textarea>
+            </div>
+
+            <div class="mb-3">
+                <label for="profile">Profile Picture</label>
+                <input type="file" name="profile" id="profile" class="form-control">
+            </div>
+
+            <button type="submit" class="btn btn-dark w-100">Create User</button>
+        </form>
+    </div>
+</div>
+
+{% endblock %}

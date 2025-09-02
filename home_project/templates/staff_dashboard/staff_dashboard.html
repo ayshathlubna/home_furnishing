@@ -1,0 +1,80 @@
+{% extends "admin/admin_extend.html" %}
+{% block 'title' %}Staff Dashboard{% endblock %}
+{% load static %}
+
+{% block 'content' %}
+<!-- Internal CSS for styling -->
+<style>
+    /* Sidebar links */
+    .sidebar a {
+        text-decoration: none;
+        color: black;
+        padding: 8px 12px;
+        border-radius: 5px;
+        display: block;
+    }
+    .sidebar a.active-category {
+        font-weight: bold;
+        color: #fff;
+        background-color: #007bff;
+    }
+    .sidebar a:hover:not(.active-category) {
+        background-color: #e2e6ea;
+    }
+
+    /* Logout button */
+    .sidebar button {
+        width: 100%;
+    }
+
+    /* Small screen adjustments */
+    @media (max-width: 768px) {
+        .sidebar {
+            margin-bottom: 20px;
+        }
+    }
+</style>
+
+<!-- Header / Logo -->
+<div class="header text-center mb-3">
+    <img src="{% static 'images/logo.png' %}" alt="Logo"  class="img-fluid" style="max-width: 300px;">
+</div>
+
+<div class="container-fluid">
+    <h3 class="text-center mb-4">Staff Dashboard</h3>
+
+    <div class="row">
+
+        <!-- Sidebar -->
+        <div class="col-md-3 col-12 mb-3">
+            <div class="border p-3 sidebar">
+                <h5>Categories</h5>
+                <div class="d-flex flex-column gap-2 mt-3">
+                    <a href="{% url 'staff_dashboard' %}?section=orders" class="{% if section == 'orders' %}active-category{% endif %}">Orders</a>
+                    <a href="{% url 'staff_dashboard' %}?section=requests" class="{% if section == 'requests' %}active-category{% endif %}">Requests</a>
+                    <a href="{% url 'staff_dashboard' %}?section=newsletter" class="{% if section == 'newsletter' %}active-category{% endif %}">Newsletter subscribers</a>
+                    <a href="{% url 'logout' %}">
+                        <button class="btn btn-outline-secondary mt-2">Logout</button>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="col-md-9 col-12">
+            <div class="border p-3">
+                {% if section == "newsletter" %}
+                    {% include 'newsletter/newsletter.html' %}
+                {% elif section == "orders" %}
+                    {% include 'staff_dashboard/order_list.html' %}
+                {% elif section == "requests" %}
+                    {% include 'staff_dashboard/requests_dashboard.html' %}
+                {% else %}
+                    <p>Welcome to the dashboard! Select a category to view its content.</p>
+                {% endif %}
+            </div>
+        </div>
+
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,7 @@
+env/
+.env
+*.pyc
+__pycache__/
+about us.txt
+datas
+home_furnishing.git

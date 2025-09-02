@@ -1,0 +1,147 @@
+{% extends 'user/extend.html' %}
+{% load static %}
+
+{% block 'title' %}My Order{% endblock %}
+{% block 'content' %}
+
+<div class="container mt-5">
+    <div class="bg-light rounded shadow-sm p-3">
+        
+        <!-- Back button -->
+        <div class="mb-3">
+            <a href="{% url 'orders' %}" class="text-dark text-decoration-none">
+                &lt; Back to orders
+            </a>
+        </div>
+
+        <div class="row g-3">
+            <!-- Left Column: Order Items -->
+            <div class="col-12 col-lg-8">
+                <div class="bg-white rounded shadow-sm p-3">
+                    <h6>Order ID: {{ order.order_id }}</h6>
+                    <h6>Total items: {{ order.total_quantity }}</h6>
+                    <hr>
+
+                    {% for i in order_items %}
+                        <div class="mb-4">
+                            
+                            <!-- Refund / Pickup / Shipping Section -->
+                            {% if i.delivery_status == "Pending" or i.delivery_status == "Shipped" %}
+                                <div class="d-flex justify-content-between">
+                                    <span>Delivery Status: {{ i.delivery_status }}</span>
+                                    {% if i.refund_amount %}
+                                        <span>Refund Amount: ₹{{ i.refund_amount }}</span>
+                                    {% endif %}
+                                </div>
+                                <p class="mt-2">Pickup from:<br><b>{{ i.order.address.name }}</b></p>
+
+                            {% elif i.delivery_status == "Returned" %}
+                                <div class="d-flex justify-content-between">
+                                    <span>Refund Status: {{ i.refund_status }}</span>
+                                    {% if i.refund_amount %}
+                                        <span>Refund Amount: ₹{{ i.refund_amount }}</span>
+                                    {% endif %}
+                                </div>
+
+                            {% elif i.delivery_status == "Cancelled" and order.payment_method != "Cash on Delivery" %}
+                                <div class="d-flex justify-content-between">
+                                    <span>Refund Status: {{ i.refund_status }}</span>
+                                    {% if i.refund_amount %}
+                                        <span>Refund Amount: ₹{{ i.refund_amount }}</span>
+                                    {% endif %}
+                                </div>
+                            {% endif %}
+
+                            <!-- Product Info -->
+                            <div class="d-flex align-items-start gap-3 mt-3">
+                                {% if i.image %}
+                                    <img src="{{ i.image.url }}" class="img-fluid rounded" style="max-width:100px;">
+                                {% else %}
+                                    <p>No image available</p>
+                                {% endif %}
+                                
+                                <div>
+                                    <p class="mb-1 fw-semibold">{{ i.product.p_name }}</p>
+                                    <p class="mb-1">Qty: {{ i.quantity }}</p>
+                                    <p class="mb-1">₹ {{ i.amount }}</p>
+
+                                    {% if i.delivery_status == "Delivered" %}
+                                        <p class="mb-1 text-success">Delivered on: {{ i.delivery_date }}</p>
+
+                                        <!-- Return Button if eligible -->
+                                        {% if i.can_return_now %}
+                                            <form method="post" action="{% url 'request_return' i.id %}">
+                                                {% csrf_token %}
+                                                <button type="submit" class="btn btn-sm btn-warning mt-1">Request Return</button>
+                                            </form>
+                                        {% elif i.refund_status == "return_requested" %}
+                                            <p class="text-warning"><b>Return Requested</b></p>
+                                        {% endif %}
+                                    {% endif %}
+
+                                    {% if i.can_cancel_now %}
+                                        <form method="post" action="{% url 'cancel_order' i.id %}">
+                                            {% csrf_token %}
+                                            <p class="mb-1">Delivery Status: {{ i.delivery_status }}</p>
+                                            <button type="submit" class="btn btn-sm btn-danger mt-1">Cancel</button>
+                                        </form>
+                                    {% elif i.cancellation_requested %}
+                                        <p class="text-warning"><b>Requested for cancellation</b></p>
+                                    {% else %}
+                                        <p class="mb-1">Delivery Status: {{ i.delivery_status }}</p>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <hr>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- Right Column: Payment and Address -->
+            <div class="col-12 col-lg-4">
+                <div class="bg-white rounded shadow-sm p-3 mb-3">
+                    <h5>Order Payment Details</h5>
+                    <hr>
+                    <table class="table table-sm">
+                        <tr>
+                            <td>Order Amount</td>
+                            <td>₹{{ order.order_amount }}</td>
+                        </tr>
+                        <tr>
+                            <td>Order Savings</td>
+                            <td>₹{{ order.order_savings }}</td>
+                        </tr>
+                        <tr>
+                            <td>Shipping Charge</td>
+                            <td>₹{{ order.delivery_charge }}</td>
+                        </tr>
+                        <tr>
+                            <td>Platform Fee</td>
+                            <td>₹{{ order.platform_fee }}</td>
+                        </tr>
+                    </table>
+                    <h6 class="text-center fw-bold">Total ({{ order.total_quantity }} items): ₹{{ order.total_amount }}</h6>
+                </div>
+
+                <div class="bg-white rounded shadow-sm p-3 mb-3">
+                    <h6>Payment Mode</h6>
+                    <div class="d-flex justify-content-between">
+                        <p class="mb-0">{{ order.payment_method }}</p>
+                        <p class="mb-0">₹{{ order.total_amount }}</p>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded shadow-sm p-3">
+                    <h6>Deliver to</h6>
+                    <p class="mb-0">{{ order.address.name }}</p>
+                    <p class="mb-0">{{ order.address.address|linebreaksbr }}</p>
+                    <p class="mb-0">{{ order.address.pincode }}</p>
+                    <p class="mb-0">Phone: {{ order.address.contact_no }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

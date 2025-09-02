@@ -1,0 +1,42 @@
+{% extends 'admin/admin_extend.html' %}
+{% block 'title'%} Update Sub-Category  {% endblock %}
+{% load static %}
+{% block 'style' %} 
+<link rel="stylesheet" href="">
+{% endblock %} 
+{% block 'content' %}
+<div class="container">
+
+    <form action="" method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div>
+        <label for="">Sub-Category ID </label>
+        <input type="text" name='sub_cat_id' value={{sub_categories.sub_cat_id}}>
+        </div>
+        <div>
+        <label for="">Sub-Category Name </label>
+        <input type="text" name='sub_cat_name' value={{sub_categories.sub_cat_name}}>
+        </div>
+        <div>
+        <label for="">Category </label>
+        <select name="category">
+            <option value="{{sub_categories.category.category_name}}">{{sub_categories.category.category_name}}</option>
+            {% for i in categories %}
+                <option value="{{i.category_name}}">{{i.category_name}}</option>
+            {% endfor %}
+            </select>
+        </div>
+        <div class="insert_id">
+                <label for="">
+                    Image
+                </label>
+                <input type="file" name="sub_cat_image">
+        </div>
+        <a href="">
+        <button>UPDATE</button>
+        </a>
+
+    </form>
+
+</div>
+{% endblock %}

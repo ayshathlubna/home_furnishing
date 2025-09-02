@@ -1,0 +1,145 @@
+{% extends "user/extend.html" %}
+{% load static %}
+{% block 'title' %} Living Room {% endblock %}
+
+{% block 'style' %}
+<link rel="stylesheet" href="{% static 'css/product_page.css' %}">
+{% endblock 'style' %}
+{% block 'content' %}
+
+<div class="container my-5">
+
+    <!-- ==============================================================================================================================  -->
+<div class="container-fluid my-5 ">
+    <div id="multiItemCarousel" class="carousel slide" data-bs-ride="carousel" style="width:100%;">
+        <div class="carousel-inner">
+            
+            {% for group in sub_cat_groups %}
+            <div class="carousel-item {% if forloop.first %}active{% endif %}">
+                <div class="row justify-content-center ">
+                    {% for i in group %}
+                    <div class="col-md-2 text-center carousel-tag">
+                        <a href="{% url 'product_page' id=i.category.category_id sub_id=i.sub_cat_id %}" style="text-decoration: none; color:black;">
+                            {% if i.sub_cat_image %}
+                                <img src="{{ i.sub_cat_image.url }}" class="img-thumbnail" style="height: 120px; width: 100%;" alt="{{ i.sub_cat_name }}">
+                            {% else %}
+                                <img src="{% static 'images/no_image.jpg' %}" class="img-thumbnail" style="height: 120px; width: 120px;" alt="No Image">
+                            {% endif %}
+                            <h6 class="mt-2">{{ i.sub_cat_name }}</h6>
+                        </a>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endfor %}
+
+        </div>
+
+        <!-- Carousel controls -->
+        <button class="carousel-control-prev custom-carousel-btn" type="button" data-bs-target="#multiItemCarousel" data-bs-slide="prev" style="margin-left: -110px;margin-top: 50px;">
+            <span class="carousel-control-prev-icon"></span>
+        </button>
+        <button class="carousel-control-next custom-carousel-btn" type="button" data-bs-target="#multiItemCarousel" data-bs-slide="next" style="margin-right: -110px;margin-top: 50px;">
+            <span class="carousel-control-next-icon"></span>
+        </button>
+    </div>
+</div>
+
+
+ <!-- ==============================================================================================================================  -->
+
+
+    <div>
+        {% if category_name or subcategory_name %}
+    <div class="alert alert-info mt-3">
+        Showing results for:
+        {% if category_name %}<strong>{{ category_name }}</strong>{% endif %}
+        {% if subcategory_name %} > <strong>{{ subcategory_name }}</strong>{% endif %}
+    </div>
+{% endif %}
+               
+<form method="get" action="{% url 'product_page' id=id sub_id=sub_id %}" class="mb-4 d-flex justify-content-between w-100">
+    <div class="d-flex gap-5">
+        <div>
+            <h5>Filter by Category:</h5>
+            <select name="category" class="form-select" onchange="this.form.submit()">
+                <option value="">All Categories</option>
+                {% for cat in category %}
+                    <option value="{{ cat.category_id }}" {% if cat.category_id|stringformat:"s" == selected_category %}selected{% endif %}>
+                        {{ cat.category_name }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+    </div>
+
+    <div class="d-flex gap-5 align-items-end">
+        <div>
+            <h5>Sort by:</h5>
+            <select name="order" class="form-select" onchange="this.form.submit()">
+                <option value="">Choose Filter</option>
+                <option value="asc" {% if order == "asc" %}selected{% endif %}>Oldest to Newest</option>
+                <option value="desc" {% if order == "desc" %}selected{% endif %}>Newest to Oldest</option>
+                <option value="lowest" {% if order == "lowest" %}selected{% endif %}>Price (Low to High)</option>
+                <option value="highest" {% if order == "highest" %}selected{% endif %}>Price (High to Low)</option>
+                <option value="high_disc" {% if order == "high_disc" %}selected{% endif %}>Discount</option>
+            </select>
+        </div>
+    </div>
+</form>
+
+        </div>
+
+        <div class="row" style="width:100%">
+            {% for i in product_images %}
+            <div class="card mx-3 my-2" style="width: 18rem;position:relative" id="cardid">
+                <a href="{% url 'product_details' i.product_id.p_id %}" >
+                    <div>
+                        
+                    <img src="{{ i.image.image.url }}" class="img-thumbnail" alt="{{ i.product_id.p_name }}">
+                    
+                    </div>
+                    
+                    <div class="card-body">
+                        <a href="{% url 'toggle_wishlist' i.product_id.p_id %}">
+                           
+                           {% if i.product_id.p_id in wishlist_ids %}
+                            <i class="fa-solid fa-heart text-danger" 
+                            style="position: absolute; top: 20px; right: 20px; font-size: 20px;"></i>
+                        {% else %}
+                            <i class="fa-solid fa-heart text-white" 
+                            style="position: absolute; top: 20px; right: 20px; font-size: 20px;"></i>
+                        {% endif %}
+                          
+                           
+                        </a>
+                        <div class="d-flex gap-5 mt- justify-content-between">
+                            
+                            {% if i.discount.discounted_price %}
+                                <h6 style="text-decoration: line-through;">{{i.product_id.price}}</h6>
+                                <h6>{{i.discount.discounted_price}}</h6>
+                                <p>{{ i.discount.disc_percent|floatformat:0}}% OFF</p>
+                            {% else %}
+                                <h6>{{i.product_id.price}}</h6>
+                            {% endif %}
+                        </div>
+                        <h6 class="card-title">{{ i.product_id.p_name }}</h6>
+                        
+                    <div>
+                </a>
+                <div>
+                <a href="{% url 'add_to_cart' i.product_id.p_id %}" class="btn btn-primary" id="cart_button">Add to Cart</a>
+                </div>
+            </div> 
+                    </div>        
+            </div>
+            
+        
+            {% endfor %}
+        </div>
+
+        
+   
+
+</div>
+{% endblock %}

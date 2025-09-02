@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    
+
+
+    <h3 style="text-align: center; padding:10px">Total Bill : </h3>
+    <table class="table">
+        <tr>
+            <td>Total MRP </td>
+            <td> ₹{{ total_mrp }} </td>
+        </tr>
+        <tr>
+            <td>Offer discount </td> 
+            <td> ₹{{ total_discount }}</td>
+    </tr>
+    <tr>
+        <td>Shipping </td>  
+        <td>₹{{ shipping }} </td> 
+    </tr>
+    <tr>
+        <td>Platform fee </td>
+        <td> ₹{{ platform_fee }}</td>
+    </tr>
+    </table>
+    <hr>
+    <h5>Total ({{total_items}} items ) : ₹{{ final_total }}</h5>
+    
+    <div class="text-center m-5">
+        <a href="{% url 'delivery_details' %}">
+            <button class="btn bg-warning text-light w-50" >{{ button_text }}</button>
+        </a>
+    
+
+</body>
+</html>

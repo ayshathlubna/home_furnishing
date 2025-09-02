@@ -1,0 +1,72 @@
+{% extends 'user/extend.html' %}
+{% load static %}
+
+{% block 'title' %}Delivery Details{% endblock %}
+
+{% block 'content' %}
+<div class="container mt-5">
+
+    <div class="row g-4">
+
+        <!-- Delivery Address -->
+        <div class="col-lg-8 col-12">
+            <div class="card p-3 h-100">
+                <div class="d-flex align-items-center gap-2 mb-3">
+                    <i class="fa-solid fa-location-dot fa-lg"></i>
+                    <h3 class="mb-0">Delivery Address</h3>
+                </div>
+                <p class="mb-2">We will deliver your order here</p>
+
+                <div class="mb-3">
+                    {% if default_address %}
+                        <p class="mb-1"><strong>{{ default_address.address.name }}</strong></p>
+                        <p class="mb-1">{{ default_address.address.address }}</p>
+                        <p class="mb-1">{{ default_address.address.pincode }}</p>
+                        <p class="mb-1">{{ default_address.address.contact_no }}</p>
+                    {% else %}
+                        <p>No default address selected.</p>
+                    {% endif %}
+                </div>
+
+                <a href="{% url 'view_address' %}?next={% url 'delivery_details' %}">
+                    <button class="btn btn-outline-primary">Change Address</button>
+                </a>
+            </div>
+        </div>
+
+        <!-- Price Summary -->
+        <div class="col-lg-4 col-12">
+            <div class="card p-3 h-100 border">
+                <h4 class="text-center mb-3">Total Bill</h4>
+                <table class="table">
+                    <tr>
+                        <td>Total MRP</td>
+                        <td>₹{{ cart.total_mrp }}</td>
+                    </tr>
+                    <tr>
+                        <td>Offer Discount</td>
+                        <td>- ₹{{ cart.total_discount }}</td>
+                    </tr>
+                    <tr>
+                        <td>Shipping</td>
+                        <td>₹{{ cart.shipping }}</td>
+                    </tr>
+                    <tr>
+                        <td>Platform Fee</td>
+                        <td>₹{{ cart.platform_fee }}</td>
+                    </tr>
+                </table>
+                <hr>
+                <h5>Total ({{ total_items }} items): ₹{{ cart.final_total }}</h5>
+
+                <div class="text-center mt-4">
+                    <a href="{% url 'placed_order' %}">
+                        <button class="btn btn-warning w-100 text-light">Proceed to Payment</button>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+{% endblock %}

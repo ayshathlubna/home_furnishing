@@ -1,0 +1,118 @@
+{% extends "user/extend.html" %}
+{% load static %}
+{% block 'title' %} Decor {% endblock %}
+
+{% block 'style' %}
+<link rel="stylesheet" href="{% static 'css/pages.css' %}">
+{% endblock 'style' %}
+{% block 'content' %}
+
+<div class="container-fluid mt-5">
+    <div id="heading">   
+        <h1>Decor</h1>
+        <p>Style in Every Detail – Decor That Defines You.</p>
+    </div>
+    <div class="container-fluid d-flex" id = "banner">
+        {% if category.category_image %}
+            <img src="{{ category.category_image.url }}" alt=" Decor">
+        {% else %}
+            <img src="{% static 'images/no_image.jpg' %}" alt="Decor" >
+        {% endif %}
+        <div class="d-flex flex-column w-50" id="offer">
+           <h3> Now Upto </h3>
+           <h1> 50% off </h1>
+           <a href="{% url 'product_page' 'C004' %}">
+           <button class="btn"> Shop Now</button>
+           </a>
+        </div>
+    </div>
+
+    <!-- ============================================================================================================================================ -->
+    
+    <div class="container d-flex flex-column align-items-center mt-5 ">
+        <h3>Shop by Categories</h3>
+        <hr style="height: 5px;width: 200px;margin-top: 5px;background-color: rgb(171, 5, 5) ;border:none">
+    </div>
+    <div class="container mt-4">            
+        <div class="row">
+                {% for i in sub_category %}  
+                <div class="col-md-4 text-center" >
+                <a href="{% url  'product_page'  id="C004" sub_id=i.sub_cat_id %}" style="text-decoration:none;color:black; ">
+                
+                    {% if i.sub_cat_image %}
+                        <img src="{{ i.sub_cat_image.url }}" class="img-thumbnail" alt="BedRoom" style="height: 400px;width: 400px;" id="img_sub">
+                        <h3>{{i.sub_cat_name}}</h3>
+                    {% else %}
+                        <img src="{% static 'images/no_image.jpg' %}" alt="BedRoom" id="img_sub">
+                    {% endif %}
+                 </a>
+                </div>
+               
+                {% endfor %} 
+        </div>                
+    </div>
+
+<!-- ============================================================================================================================================ -->
+    
+    <div class="container d-flex flex-column align-items-center mt-5 ">
+        <h3>Exclusive Products</h3>
+        <hr style="height: 5px;width: 200px;margin-top: 5px;background-color: rgb(171, 5, 5) ;border:none">
+    </div>
+
+    <!-- <div class="container">            
+        <div class="row">
+
+                {% for i in product_images %}
+
+                <div class="col-md-2 text-center" >
+                    {% if i.image %}
+                        <img src="{{ i.image.url }}" class="img-thumbnail" alt="image missing" style="height: 300px;width: 300px;" id="img_sub">
+                        <h6>{{i.product.p_name}}</h6>
+                    {% else %}
+                        <img src="{% static 'images/no_image.jpg' %}" alt="Living Room" id="img_sub">
+                    {% endif %}
+                </div>
+               
+                {% endfor %} 
+        </div>
+                 
+    </div> -->
+
+   <div class="container my-5">
+    <div id="multiItemCarousel" class="carousel slide" data-bs-ride="carousel">
+        <div class="carousel-inner">
+
+            {% for group in product_groups %}
+            <div class="carousel-item {% if forloop.first %}active{% endif %}">
+                <div class="row justify-content-center">
+                    {% for i in group %}
+                    <div class="col-md-3 text-center">
+                        {% if i.image %}
+                            <img src="{{ i.image.url }}" class="img-thumbnail" alt="Product Image" style="height: 300px; width: 300px;">
+                        {% else %}
+                            <img src="{% static 'images/no_image.jpg' %}" class="img-thumbnail" alt="No Image" style="height: 300px; width: 300px;">
+                        {% endif %}
+                        <h6 class="mt-2">{{ i.product.p_name }}</h6>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endfor %}
+
+        </div>
+
+        <!-- Carousel Controls -->
+        <button class="carousel-control-prev" type="button" data-bs-target="#multiItemCarousel" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon"></span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#multiItemCarousel" data-bs-slide="next">
+            <span class="carousel-control-next-icon"></span>
+        </button>
+    </div>
+
+     <!-- ============================================================================================================================================ -->
+</div>
+
+{% endblock 'content' %}
+
+

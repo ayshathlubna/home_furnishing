@@ -1,0 +1,84 @@
+{% extends 'user/extend.html' %}
+{% load static %}
+
+{% block 'title' %}My Wishlist{% endblock %}
+
+{% block 'content' %}
+<div class="container mt-5">
+
+    {% if wishlist_items %}
+        <h3 class="mb-4">My wishlist ({{ total_items }})</h3>
+
+        <div class="row g-3">
+            {% for item in wishlist_items %}
+            <div class="col-12">
+                <div class="card flex-row flex-wrap align-items-center p-3">
+                    
+                    <!-- Product Link & Info -->
+                    <a href="{% url 'product_details' item.product.p_id %}" class="d-flex flex-row flex-grow-1 text-decoration-none text-dark align-items-center">
+
+                        <!-- Product Image -->
+                        <div>
+                            {% if item.product_image %}
+                                <img src="{{ item.product_image.image.url }}" 
+                                     alt="{{ item.product.p_name }}" 
+                                     class="img-fluid" 
+                                     style="width:120px; height:120px; object-fit: cover;">
+                            {% else %}
+                                <div class="d-flex justify-content-center align-items-center bg-light" style="width:120px; height:120px;">
+                                    <span>No image</span>
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <!-- Product Details -->
+                        <div class="ms-3 flex-grow-1">
+                            <h5 class="mb-2">{{ item.product.p_name }}</h5>
+                            <p class="mb-2">{{ item.product.description|truncatewords:15 }}</p>
+                            <p class="mb-0">
+                                {% if item.product.disc_percent > 0 %}
+    <span class="text-decoration-line-through">₹{{ item.product.price }}</span>
+    <strong class="text-success ms-2">₹{{ item.product.disc_price }}</strong>
+    <span class="text-danger ms-2">({{ item.product.disc_percent }}% off)</span>
+{% else %}
+    <strong>₹{{ item.product.price }}</strong>
+{% endif %}
+
+                            </p>
+                        </div>
+                    </a>
+
+                    <!-- Delete Button -->
+                    <div class="ms-3 mt-2 mt-md-0 d-flex  gap-2">
+
+    <!-- Add to Cart Button -->
+    <form action="{% url 'add_to_cart' item.product.p_id %}" method="POST" onClick="event.stopPropagation();">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-success">
+            <i class="fa-solid fa-cart-plus"></i> Add to Cart
+        </button>
+    </form>
+
+    <!-- Delete Button -->
+    <a href="{% url 'delete_wishlist' item.id %}" onclick="event.stopPropagation();">
+        <button class="btn btn-outline-danger">
+            <i class="fa-solid fa-trash"></i>
+        </button>
+    </a>
+
+</div>
+
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+    {% else %}
+        <div class="text-center my-5">
+            <h3>My Wishlist</h3>
+            <h5 class="mt-5">No wishlist added</h5>
+        </div>
+    {% endif %}
+
+</div>
+{% endblock %}

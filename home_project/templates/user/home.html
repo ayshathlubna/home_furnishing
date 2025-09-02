@@ -1,0 +1,206 @@
+{% extends 'user/extend.html' %}
+{% block 'title'%} Izyaansh Home Furnshing {% endblock %}
+{% load static %}
+
+
+
+{% block 'content' %}
+
+<link rel="stylesheet" href="{% static 'css/home.css' %}">
+
+<div class="container-fluid mt-5">
+  <div id="carouselExampleCaptions" class="carousel slide">
+    <div class="carousel-indicators">
+      <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+      <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="1" aria-label="Slide 2"></button>
+      <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="2" aria-label="Slide 3"></button>
+      <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="3" aria-label="Slide 4"></button>
+    </div>
+    <div class="carousel-inner">
+
+      <div class="carousel-item active">
+        <img src="{% static 'images/decor-fest.jpg' %}" class="d-block w-100" alt="not available">        
+        <p>Curtains, Rug, Wallart ... </p>
+        
+        <div class="carousel-details-container">
+          <h1> Decor Fest </h1>
+          <h2> Limited-time offers to elevate your living </h2>
+          <h3> Upto <span style="font-size:45px;"> 50 </span> % off </h3>
+          <h4>   on Decors </h4>
+          <a href="{% url 'product_page' 'C004' %}">
+            <button > Shop Now</button>
+          </a>
+        </div>
+      </div>
+
+      <div class="carousel-item ">
+        <img src="{% static 'images/homeware.webp' %}" class="d-block w-100" alt="...">        
+        <p>Homeware, Cookware, Storage and Containers</p>
+        
+        <div class="carousel-details-container">
+          <h1> Luxury Homeware </h1>
+          <h2> for Modern Spaces </h2>
+          <h3> Upto <span style="font-size:45px;"> 50 </span> % off </h3>
+          <h4>   on Homeware </h4>
+          <a href="{% url 'product_page' 'C006' %}">
+            <button > Shop Now</button>
+          </a>
+        </div>
+      </div>
+
+      <div class="carousel-item">
+        <img src="{% static 'images/living-elegance.avif' %}" class="d-block w-100" alt="...">        
+        <p>Sofas, TV Units , Coffee Tables </p>
+        
+        <div class="carousel-details-container">
+          <h1> Living Room Elegance </h1>
+          <h2> The Heart of Your Home </h2>
+          <h3> Upto <span style="font-size:45px;"> 50 </span> % off </h3>
+          <h4>   on Living Room Products </h4>
+          <a href="{% url 'product_page' 'C001' %}">
+            <button > Shop Now</button>
+          </a>
+        </div>
+      </div>
+
+
+      <div class="carousel-item">
+        <img src="{% static 'images/bedroom-carousel.webp' %}" class="d-block w-100" alt="...">        
+        <p>Beds , Wardrobes, Bedside Tables</p>
+        
+        <div class="carousel-details-container">
+          <h1> Dream in Style</h1>
+          <h2> Comfort and style, tailored for you </h2>
+          <h3> Upto <span style="font-size:45px;"> 50 </span> % off </h3>
+          <h4>   on Bedroom </h4>
+          <a href="{% url 'product_page' 'C002' %}">
+            <button > Shop Now</button>
+          </a>
+        </div>
+      </div>
+
+    </div>
+    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="prev">
+      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+      <span class="visually-hidden">Previous</span>
+    </button>
+    <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="next">
+      <span class="carousel-control-next-icon" aria-hidden="true"></span>
+      <span class="visually-hidden">Next</span>
+    </button>
+  </div>
+
+  <div class="container my-5 text-center">
+    <h3>Shop by Brand</h3>
+    <hr class="mx-auto" style="height: 5px;width: 100px;background-color: rgb(171, 5, 5);border:none;">
+    <div class="row justify-content-center g-3">
+      {% for brand, image_url in brand_products.items %}
+        <div class="col-12 col-sm-4 col-md-3 col-lg-2">
+          <div class="card h-100">
+            <a href="{% url 'product_page' %}?brand={{ brand }}" class="text-decoration-none text-dark">
+              <img src="{{ image_url }}" class="card-img-top img-fluid" alt="{{ brand }}">
+              <div class="card-body p-2">
+                <h6 class="card-title">{{ brand }}</h6>
+              </div>
+            </a>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+
+  <div class="container my-5 text-center">
+    <div class="d-flex flex-column justify-content-center align-items-center">
+      <h3>Bag The Best</h3>
+      <hr style="height: 5px;width: 100px;margin-top: 5px;background-color: rgb(171, 5, 5) ;border:none;margin-bottom: 30px;">
+    </div>
+    <div class="container mt-4">
+      <div class="row g-3">
+        <div class="col-md-3">
+          <a href="{% url 'product_page' %}?discount=min70" style="text-decoration:none; color:inherit;">
+            <div class="card text-center shadow-sm p-4 " style="height:150px;">
+              <h4>Min</h4>
+              <h1 class="text-success">70% off</h1>
+            </div>
+          </a>
+        </div>
+        <div class="col-md-3">
+          <a href="{% url 'product_page' %}?discount=from50to70" style="text-decoration:none; color:inherit;">
+            <div class="card text-center shadow-sm py-4" style="height:150px;">
+              <h4>From</h4>
+              <h1 class="text-primary">50% - 70% off</h1>
+            </div>
+          </a>
+        </div>
+        <div class="col-md-3">
+          <a href="{% url 'product_page' %}?discount=upto50" style="text-decoration:none; color:inherit;">
+            <div class="card text-center shadow-sm p-4" style="height:150px;">
+              <h4>Upto</h4>
+              <h1 class="text-danger">50% off</h1>
+            </div>
+          </a>
+        </div>
+        <div class="col-md-3">
+          <a href="{% url 'product_page' %}?discount=under999" style="text-decoration:none; color:inherit;">
+            <div class="card text-center shadow-sm p-4" style="height:150px;">
+              <h4>Under</h4>
+              <h1 class="text-warning">Rs.999</h1>
+            </div>
+          </a>
+        </div>
+    </div>
+  </div>
+
+  <div class="mt-5">
+    <div class="d-flex flex-column justify-content-center align-items-center">
+      <h3>Recently Viewed</h3>
+      <hr style="height: 5px;width: 100px;margin-top: 5px;background-color: rgb(171, 5, 5) ;border:none;margin-bottom: 30px;">
+    </div>
+    <div class="row">
+
+       {% for product in recently_viewed_products %}
+       <div class="col-md-2 my-2 ">
+        <a href="{% url 'product_details' product.p_id %}" style="text-decoration: none;color: black;">
+          <div class="card p-2 h-100">
+            {% if product.product_image_set.first %}
+                    <img src="{{ product.product_image_set.first.image.url }}" class="h-75">
+                {% endif %}
+            <p>{{ product.p_name }}</p>
+          </div>
+        </a>
+       </div>
+    {% endfor %}
+    </div>
+
+
+    </div>
+  </div>
+
+  <div class="container my-5">
+    <div class="d-flex flex-column justify-content-center align-items-center">
+      <h3>Recommended for you</h3>
+      <hr style="height: 5px;width: 100px;margin-top: 5px;background-color: rgb(171, 5, 5) ;border:none;margin-bottom: 30px;">
+    </div>
+    <div class="row">
+        
+      {% for product in recommended_products %}
+        <div class="col-md-2 my-2 ">
+          <a href="{% url 'product_details' product.p_id %}" style="text-decoration: none;color: black;">
+            <div class="card p-2 h-100">
+                
+                {% if product.product_image_set.first %}
+                    <img src="{{ product.product_image_set.first.image.url }}" class="h-75">
+                {% endif %}
+                <p>{{ product.p_name }}</p>
+            </div>    
+        
+          </a> 
+        </div>
+        
+      {% endfor %}
+    </div>
+  </div>
+  
+
+</div>
+{% endblock %}

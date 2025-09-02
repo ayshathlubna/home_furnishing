@@ -1,0 +1,98 @@
+{% extends 'admin/admin_extend.html' %}
+{% load static %}
+{% block 'title' %}Staff Order Detail{% endblock %}
+
+{% block 'content' %}
+<div class="container mt-4">
+    <a href="{% url 'staff_dashboard' %}" class="text-decoration-none mb-3 d-inline-block">
+        &larr; Back to Dashboard
+    </a>
+
+    <h2 class="mb-2">Order ID: {{ order.order_id }}</h2>
+    <p><strong>Order Refund Status:</strong> {{ order.refund_status }}</p>
+    <p><strong>Payment Status:</strong> {{ order.payment_status }}</p>
+
+    <h3 class="mt-4 mb-3">Order Items</h3>
+    <form method="post">
+        {% csrf_token %}
+        <div class="table-responsive">
+            <table class="table table-bordered text-center align-middle">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Product</th>
+                        <th>Qty</th>
+                        <th>Total</th>
+                        <th>Delivery Status</th>
+                        <th>Payment Status</th>
+                        <th>Refund Status</th>
+                        <th>Return Requested</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in items %}
+                    <tr>
+                        <td>{{ item.product.p_name }}</td>
+                        <td>{{ item.quantity }}</td>
+                        <td>₹{{ item.total_amount }}</td>
+                        <td>
+                            <select name="delivery_status_{{ item.id }}" class="form-select form-select-sm">
+                                <option value="Pending" {% if item.delivery_status == "Pending" %}selected{% endif %}>Pending</option>
+                                <option value="Shipped" {% if item.delivery_status == "Shipped" %}selected{% endif %}>Shipped</option>
+                                <option value="Delivered" {% if item.delivery_status == "Delivered" %}selected{% endif %}>Delivered</option>
+                                <option value="Returned" {% if item.delivery_status == "Returned" %}selected{% endif %}>Returned</option>
+                                <option value="Cancelled" {% if item.delivery_status == "Cancelled" %}selected{% endif %}>Cancelled</option>
+                            </select>
+                            {% if item.delivery_status == "Delivered" %}
+                                <small class="text-muted d-block mt-1">Delivered on: {{ item.order.delivery_date }}</small>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <select name="payment_status_{{ item.id }}" class="form-select form-select-sm">
+                                <option value="Pending" {% if item.payment_status == "Pending" %}selected{% endif %}>Pending</option>
+                                <option value="Paid" {% if item.payment_status == "Paid" %}selected{% endif %}>Paid</option>
+                                <option value="Refunded" {% if item.payment_status == "Refunded" %}selected{% endif %}>Refunded</option>
+                                <option value="Cancelled" {% if item.payment_status == "Cancelled" %}selected{% endif %}>Cancelled</option>
+                            </select>
+                        </td>
+                        <td>
+                            <select name="refund_status_{{ item.id }}" class="form-select form-select-sm">
+                                <option value="Not Requested" {% if item.refund_status == "Not Requested" %}selected{% endif %}>Not Requested</option>
+                                <option value="Requested" {% if item.refund_status == "Requested" %}selected{% endif %}>Return Requested</option>
+                                <option value="cancellation_requested" {% if item.refund_status == "cancellation_requested" %}selected{% endif %}>Cancellation Requested</option>
+                                <option value="Completed" {% if item.refund_status == "Completed" %}selected{% endif %}>Completed</option>
+                                <option value="Rejected" {% if item.refund_status == "Rejected" %}selected{% endif %}>Rejected</option>
+                            </select>
+                        </td>
+                        <td>
+                            {% if item.refund_status in "Requested,cancellation_requested" %}
+                                <span class="badge bg-warning text-dark">Pending</span>
+                            {% else %}
+                                <span class="text-muted">N/A</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if item.refund_status in "Requested,cancellation_requested" %}
+                                <a href="{% url 'approve_request' item.id %}" class="btn btn-sm btn-success mb-1">Approve</a>
+                                <a href="{% url 'reject_request' item.id %}" class="btn btn-sm btn-danger mb-1">Reject</a>
+                            {% else %}
+                                <span class="text-muted">No Action</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <button type="submit" class="btn btn-primary mt-3">Update All Items</button>
+    </form>
+
+    <h3 class="mt-5">Customer Details</h3>
+    <table class="table">
+        <tr><td>Customer:</td><td>{{ order.user.username }}</td></tr>
+        <tr><td>Address:</td><td>{{ order.address.name }}<br>{{ order.address.address|linebreaksbr }}<br>{{ order.address.pincode }}<br>{{ order.address.contact_no }}</td></tr>
+        <tr><td>Payment Method:</td><td>{{ order.payment_method }}</td></tr>
+    </table>
+
+</div>
+{% endblock %}

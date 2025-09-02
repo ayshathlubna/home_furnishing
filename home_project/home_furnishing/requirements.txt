@@ -1,0 +1,16 @@
+django
+numpy
+tensorflow
+scikit-learn
+spacy
+transformers
+torch
+python-dotenv
+gunicorn
+psycopg2-binary
+dj-database-url
+whitenoise
+pillow
+requests
+python-dotenv
+

@@ -1,0 +1,74 @@
+/* Carousel buttons positioning */
+.carousel-control-prev,
+.carousel-control-next {
+  top: 80%; /* vertical center */
+  transform: translateY(-50%);
+  width: 40px;
+  height: 40px;
+  background-color: red; /* button color */
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 1;
+  z-index: 10; /* ensure it stays above images */
+}
+
+/* Adjust distance from carousel edges */
+.carousel-control-prev {
+  left: 5px; /* closer to left image edge */
+}
+
+.carousel-control-next {
+  right: 5px; /* closer to right image edge */
+}
+
+/* Remove default Bootstrap icon */
+.carousel-control-prev-icon,
+.carousel-control-next-icon {
+  background: none;
+  font-size: 24px;
+  color: black;
+}
+
+/* Add custom arrows */
+.carousel-control-prev-icon::after {
+  content: '‹'; 
+}
+
+.carousel-control-next-icon::after {
+  content: '›';
+}
+
+
+#multiItemCarousel{
+    width: 100%;
+ 
+}
+
+#cart_button{
+    display: none;
+}
+#cardid:hover #cart_button{
+    display: block;
+}
+#cardid a, #carousel_tag a{
+    text-decoration: none; 
+    color:black;
+}
+#cardid{
+    position: relative;
+    display: inline-block;
+}
+#cardid p{
+    position: absolute;
+    top: 10px;
+    left: 20px;
+    background-color: red;
+    color: white;
+    padding: 5px 10px;
+    font-weight: bold;
+    border-radius: 5px;
+    z-index: 4;
+    font-size: 14px;
+}

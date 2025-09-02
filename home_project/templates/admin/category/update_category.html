@@ -1,0 +1,30 @@
+{% extends 'admin/admin_extend.html' %}
+{% block 'title'%} Update Category  {% endblock %}
+{% load static %}
+{% block 'style' %} 
+<link rel="stylesheet" href="">
+{% endblock %} 
+{% block 'content' %}
+<div class="container">
+
+    <form action="{% url 'update_category' categorys.category_id %}" method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div>
+        <label for="">Category ID </label>
+        <input type="text" name='category_id' value={{categorys.category_id}}>
+        </div>
+        <div>
+        <label for="">Category Name </label>
+        <input type="text" name='category_name' value={{categorys.category_name}}>
+        </div>
+         <label for=""> Image </label>
+        <input type="file"  name='category_image'>
+        </div>
+       
+        <button>UPDATE</button>
+        
+
+    </form>
+
+</div>
+{% endblock %}

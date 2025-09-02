@@ -1,0 +1,34 @@
+h4{
+    margin: 500px;
+    color:red;
+}
+.form-container {
+  max-width: 600px;
+  margin: auto;
+  margin-top: 15px;
+}
+
+.insert_id {
+  display: flex;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.insert_id label {
+  width: 150px; /* equal width for all labels */
+  text-align: start;
+}
+
+.insert_id input {
+  flex: 1; /* input fills the rest of the space */
+}
+
+.insert_id select {
+    margin-left: 20px;
+  flex: 1; /* input fills the rest of the space */
+}
+
+#add_button{
+    margin-top: 20px;
+    width: 100px;
+}

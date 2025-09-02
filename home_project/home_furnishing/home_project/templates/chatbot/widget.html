@@ -1,0 +1,155 @@
+<div id="chatbot-icon">💬</div>
+<div id="chatbot-box" style="display: none;">
+    <div id="chat-messages"></div>
+    <div id="typing-indicator" style="display: none;">Bot is typing...</div>
+    <div class="d-flex gap-3 mt-2">
+        <input type="text" id="chat-input" placeholder="Ask me anything..." />
+        <button id="send-btn">➤</button>
+    </div>
+</div>
+
+<style>
+#chatbot-icon {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background: #007bff;
+    color: white;
+    padding: 12px;
+    border-radius: 50%;
+    cursor: pointer;
+    z-index: 99999;
+    transition: transform 0.2s ease-in-out;
+}
+#chatbot-icon:hover {
+    transform: scale(1.1);
+}
+#chatbot-box {
+    position: fixed;
+    bottom: 70px;
+    right: 20px;
+    width: 300px;
+    height: 400px;
+    background: white;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    padding: 10px;
+    z-index: 99999;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    display: flex; /* Use flexbox for layout */
+    flex-direction: column;
+}
+#chat-messages {
+    flex-grow: 1; /* Allow messages to fill available space */
+    overflow-y: auto;
+    display: flex; /* Use flexbox for messages */
+    flex-direction: column-reverse; /* Stack messages from bottom up */
+}
+#chat-input {
+    flex-grow: 1;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 5px;
+}
+#typing-indicator {
+    font-style: italic;
+    color: gray;
+    margin-bottom: 5px;
+    text-align: center;
+}
+.chat-message {
+    padding: 5px 0;
+}
+.chat-message.user {
+    text-align: right;
+    color: #007bff;
+}
+.chat-message.bot {
+    text-align: left;
+    color: #333;
+}
+</style>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+    const chatbotIcon = document.getElementById("chatbot-icon");
+    const chatbotBox = document.getElementById("chatbot-box");
+    const chatInput = document.getElementById("chat-input");
+    const sendBtn = document.getElementById("send-btn");
+    const chatMessages = document.getElementById("chat-messages");
+    const typingIndicator = document.getElementById("typing-indicator");
+
+    // Toggle chatbot box visibility
+    chatbotIcon.onclick = () => {
+        chatbotBox.style.display = chatbotBox.style.display === "none" ? "flex" : "none";
+    };
+
+    // Handle sending a message
+    const sendMessage = async () => {
+        let message = chatInput.value.trim();
+        if (!message) return;
+        chatInput.value = "";
+
+        // Add user message to the chat
+        const userMsgDiv = document.createElement("div");
+        userMsgDiv.className = "chat-message user";
+        userMsgDiv.innerHTML = `<b>You:</b> ${message}`;
+        chatMessages.prepend(userMsgDiv);
+        
+        // Show typing indicator
+        typingIndicator.style.display = "block";
+
+        try {
+            const response = await fetch("/api/chatbot/", {
+                method: "POST",
+                headers: {"Content-Type": "application/json"},
+                body: JSON.stringify({ message: message })
+            });
+
+            if (!response.ok) {
+                throw new Error(`Server error: ${response.status}`);
+            }
+
+            const data = await response.json();
+            
+            // Hide typing indicator
+            typingIndicator.style.display = "none";
+
+            const botMsgDiv = document.createElement("div");
+            botMsgDiv.className = "chat-message bot";
+
+            if (data.type === "products") {
+                const productHtml = data.products.map(
+                    p => `<div>🛒 <a href="/product/product_details/${p.id}">${p.name}</a> - ₹${p.price}</div>`
+                ).join("");
+                botMsgDiv.innerHTML = `<b>Bot:</b> Here are some products I found:<br>${productHtml}`;
+            } else {
+                botMsgDiv.innerHTML = `<b>Bot:</b> ${data.response}`;
+            }
+
+            chatMessages.prepend(botMsgDiv);
+        } catch (error) {
+            console.error("Chatbot API Error:", error);
+            typingIndicator.style.display = "none";
+            const errorMsgDiv = document.createElement("div");
+            errorMsgDiv.className = "chat-message bot";
+            errorMsgDiv.innerHTML = "<b>Bot:</b> Sorry, an error occurred. Please try again.";
+            chatMessages.prepend(errorMsgDiv);
+        }
+    };
+
+    // Event listeners
+    sendBtn.onclick = sendMessage;
+    chatInput.addEventListener("keypress", (e) => {
+        if (e.key === "Enter") {
+            sendMessage();
+        }
+    });
+
+    // Initial welcome message
+    const welcomeMsg = document.createElement("div");
+    welcomeMsg.className = "chat-message bot";
+    welcomeMsg.innerHTML = "<b>Bot:</b> Hello! I'm a product chatbot. What are you looking for?";
+    chatMessages.prepend(welcomeMsg);
+});
+</script>

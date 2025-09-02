@@ -1,0 +1,42 @@
+{% extends 'user/extend.html' %}
+ {% load static %}
+ <link rel="stylesheet" href="{% static 'css/insert.css' %}">
+{% block 'title' %}Update Address{% endblock %}
+
+{% block 'content' %}
+<div>
+    <form action="{% url 'update_address' address.id %}" method="POST">
+        {% csrf_token %}
+        <h4>Update Address</h4>
+        <div>
+            <div class="insert_id form-container">
+            <label for="">
+                Name
+            </label>
+            <input type="text" name="name" value ={{address.name}}>
+            </div>
+            <div class="insert_id form-container">
+            <label for="">
+                Address
+            </label>
+            <textarea name="address" > {{address.address}} </textarea>
+            </div>
+            <div class="insert_id form-container">
+            <label for="">
+                Pincode
+            </label>
+            <input type="text" name="pincode" value ={{address.pincode}}> 
+            </div>
+            <div class="insert_id form-container">
+            <label for="">
+                Contact no
+            </label>
+            <input type="text" name="contact_no" value ={{address.contact_no}}>
+            </div>
+            <button class="btn">Update
+            </button>
+        </div>
+
+    </form>
+</div>
+{% endblock %}

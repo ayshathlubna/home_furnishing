@@ -1,0 +1,66 @@
+{% extends 'admin/admin_extend.html' %}
+{% block 'title' %}Admin Page{% endblock %}
+{% block 'content' %}
+<div class="container mt-4">
+    <h3 class="text-center mb-4">Users List</h3>
+
+    <div class="table-responsive">
+        <table class="table table-bordered table-striped text-center">
+            <thead class="table-dark">
+                <tr>
+                    <th>ID</th>
+                    <th>First Name</th>
+                    <th>Last Name</th>
+                    <th>Username</th>
+                    <th>Gender</th>
+                    <th>DOB</th>
+                    <th>Email</th>
+                    <th>Contact No</th>
+                    <th>Address</th>
+                    <th>Update</th>
+                    <th>Delete</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for i in users %}
+                <tr>
+                    <td>{{ i.id }}</td>
+                    <td>{{ i.first_name }}</td>
+                    <td>{{ i.last_name }}</td>
+                    <td>{{ i.username }}</td>
+                    <td>{{ i.profile.gender }}</td>
+                    <td>{{ i.date_of_birth }}</td>
+                    <td>{{ i.email }}</td>
+                    <td>{{ i.profile.mobile }}</td>
+                    <td>{{ i.profile.address }}</td>
+                    <td>
+                        <a href="{% url 'user_update' i.id %}">
+                            <button class="btn btn-sm btn-primary">Edit</button>
+                        </a>
+                    </td>
+                    <td>
+                        <a href="{% url 'user_delete' i.id %}" onclick="return confirm('Are you sure you want to delete this profile? This action cannot be undone.');">
+                            <button class="btn btn-sm btn-danger">Delete</button>
+                        </a>
+                    </td>
+                    <td>
+                        <a href="{% url 'status_update' i.id %}">
+                            {% if i.is_active %}
+                                <button class="btn btn-sm btn-success">Active</button>
+                            {% else %}
+                                <button class="btn btn-sm btn-warning">Blocked</button>
+                            {% endif %}
+                        </a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="12" class="text-center text-muted">No users found.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

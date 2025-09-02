@@ -1,0 +1,96 @@
+{% extends "admin/admin_extend.html" %}
+{% block 'title' %} Dashboard {% endblock %}
+{% load static %}
+
+{% block 'content' %}
+<style>
+    .active-category {
+        text-decoration: none;
+        font-weight: bold;
+        color: #fff;
+        background-color: #007bff; /* Bootstrap primary color */
+        padding: 5px 10px;
+        border-radius: 5px;
+    }
+
+    #list a {
+        text-decoration: none;
+        color: black;
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 992px) {
+        .dashboard-container {
+            flex-direction: column;
+        }
+
+        #list {
+            width: 100% !important;
+            flex-direction: row !important;
+            flex-wrap: wrap;
+            justify-content: center;
+            padding: 10px 0;
+        }
+
+        #list a {
+            margin: 5px;
+        }
+
+        .content-area {
+            width: 100% !important;
+            margin-top: 20px;
+        }
+    }
+</style>
+
+<div class="header text-center mb-3">
+    <img style="max-width:100%; height:70px; margin-top:10px;" src="{% static 'images/logo.png' %}" alt="Logo">
+</div>
+
+<div class="container-fluid border mt-2">
+    <h3 class="text-center mt-3">Dashboard</h3>
+
+    <div class="container dashboard-container d-flex m-5">
+        <!-- Sidebar -->
+        <div class="container d-flex flex-column border w-25 py-5" id="list">
+            <h5 class="text-center">Categories</h5>
+            <div class="d-flex flex-column gap-2 mt-3">
+                <a href="{% url 'dashboard' %}?section=user" class="{% if section == 'user' %}active-category{% endif %}">Users</a>
+                <a href="{% url 'dashboard' %}?section=staff" class="{% if section == 'staff' %}active-category{% endif %}">Staffs</a>
+                <a href="{% url 'dashboard' %}?section=products" class="{% if section == 'products' %}active-category{% endif %}">Products</a>
+                <a href="{% url 'dashboard' %}?section=category" class="{% if section == 'category' %}active-category{% endif %}">Category</a>
+                <a href="{% url 'dashboard' %}?section=sub_category" class="{% if section == 'sub_category' %}active-category{% endif %}">Sub_category</a>
+                <a href="{% url 'dashboard' %}?section=orders" class="{% if section == 'orders' %}active-category{% endif %}">Orders</a>
+                <a href="{% url 'staff_dashboard' %}?section=requests" class="{% if section == 'requests' %}active-category{% endif %}">Requests</a>
+                <a href="{% url 'dashboard' %}?section=newsletter" class="{% if section == 'newsletter' %}active-category{% endif %}">Newsletter subscribers</a>
+                <a href="{% url 'logout' %}">
+                    <button class="btn btn-danger mt-3 w-100">Logout</button>
+                </a>
+            </div>
+        </div>
+
+        <!-- Content Area -->
+        <div class="container content-area d-flex flex-column text-center w-75">
+            {% if section == "user" %}
+                {% include 'admin/userlists.html' %}
+            {% elif section == "staff" %}
+                {% include 'admin/staff_list.html' %}
+            {% elif section == "products" %}
+                {% include 'admin/product/display_product.html' %}
+            {% elif section == "category" %}
+                {% include 'admin/category/display_category.html' %}
+            {% elif section == "sub_category" %}
+                {% include 'admin/sub_category/display_subcategory.html' %}
+            {% elif section == "newsletter" %}
+                {% include 'newsletter/newsletter.html' %}
+            {% elif section == "orders" %}
+                {% include 'staff_dashboard/order_list.html' %}
+            {% elif section == "requests" %}
+                    {% include 'staff_dashboard/requests_dashboard.html' %}
+            {% else %}
+                <p>Welcome to the dashboard! Select a category to view its content.</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

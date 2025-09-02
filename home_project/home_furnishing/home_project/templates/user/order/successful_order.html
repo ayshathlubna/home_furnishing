@@ -1,0 +1,19 @@
+{% extends 'user/extend.html' %}
+ {% load static %}
+
+{% block 'title' %}Order Completed {% endblock %}
+
+{% block 'content' %}
+<div class="container mt-5 mb-5">
+    <div class="text-center mt-5">
+        <h3>Thank you for ordering</h3>
+        <h6>Your order {{cart.order_id}}has been successfully placed </h6>
+    </div>
+    <div class="text-center">
+        <h6>To go back to homepage </h6>
+        <a href="{% url 'home' %}">
+        <button class="btn">Click Here</button>
+        </a>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,111 @@
+{% extends 'user/extend.html' %}
+{% load static %}
+
+{% block 'title' %}Search products{% endblock %}
+
+{% block 'content' %}
+<div class="container mt-5">
+
+    <!-- Search Inputs -->
+    <div class="row g-4 justify-content-center">
+
+        <!-- Text Search -->
+        <div class="col-12 col-md-6">
+            <form action="" method="GET" class="bg-white p-3 rounded shadow-sm">
+                <h4 class="text-center mb-3">Search by Name</h4>
+                <div class="input-group">
+                    <input type="text"
+                           placeholder="Search product"
+                           value="{{ query }}"
+                           name="q"
+                           list="recent-searches"
+                           id="searchInput"
+                           class="form-control">
+                    <datalist id="recent-searches">
+                        {% for item in recent_searches %}
+                            <option value="{{ item.text }}"></option>
+                        {% endfor %}
+                    </datalist>
+                    <button type="submit" class="btn btn-primary">Search</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Image Search -->
+        <div class="col-12 col-md-6">
+            <form action="" method="POST" enctype="multipart/form-data" class="bg-white p-3 rounded shadow-sm">
+                {% csrf_token %}
+                <h4 class="text-center mb-3">Search by Image</h4>
+                <input type="file" name="image" accept="image/*" class="form-control mb-2">
+                <button type="submit" class="btn btn-primary w-100">Search</button>
+            </form>
+        </div>
+
+    </div>
+
+    <!-- Recent Searches -->
+    <div class="mt-5">
+        {% if recent_searches %}
+            <h3 class="mb-3">Recent Searches</h3>
+            <div class="d-flex flex-wrap gap-3">
+                {% for item in recent_searches %}
+                    <a href="?q={{ item.text }}" class="text-decoration-none text-dark text-center">
+                        {% if item.image %}
+                            <img src="{{ item.image }}" width="80" height="80"
+                                 class="rounded-circle object-fit-cover">
+                        {% else %}
+                            <img src="{% static 'images/default.png' %}" width="60" height="60"
+                                 class="rounded object-fit-cover">
+                        {% endif %}
+                        <p class="small mt-1">{{ item.text }}</p>
+                    </a>
+                {% endfor %}
+            </div>
+        {% endif %}
+    </div>
+
+    <!-- Search Results -->
+    <div class="mt-5">
+        <h4>
+            {% if query or form.is_bound %}
+                Results
+            {% else %}
+                Search Products
+            {% endif %}
+        </h4>
+
+        <div class="row g-3">
+            {% if products %}
+                {% for product in products %}
+                    <div class="col-6 col-md-4 col-lg-3">
+                        <div class="card h-100">
+                            <a href="{% url 'product_details' product.p_id %}" class="text-decoration-none text-dark">
+                                {% if product.product_image_set.all %}
+                                    <img src="{{ product.product_image_set.first.image.url }}" class="card-img-top img-fluid">
+                                {% endif %}
+                                <div class="card-body p-2">
+                                    <p class="card-text small">{{ product.p_name }}</p>
+                                </div>
+                            </a>
+                            <div class="p-2">
+                                <a href="{% url 'add_to_cart' product.p_id %}" class="btn btn-sm btn-primary w-100">
+                                    Add to cart
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <div class="col-12">
+                    {% if query or form.is_bound %}
+                        <p>No products found for this search.</p>
+                    {% else %}
+                        <p>Please enter a search term or upload an image to see results.</p>
+                    {% endif %}
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+</div>
+{% endblock %}

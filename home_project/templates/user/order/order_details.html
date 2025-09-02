@@ -1,0 +1,131 @@
+{% extends 'user/extend.html' %}
+{% load static %}
+
+{% block 'title' %}My Order{% endblock %}
+{% block 'content' %}
+
+<div class="container mt-5">
+    <div class="bg-light rounded shadow-sm p-3">
+        
+        <div class="mb-3">
+            <a href="{% url 'orders' %}" class="text-dark text-decoration-none">
+                &lt; Back to orders
+            </a>
+        </div>
+
+        <div class="row g-3">
+            <div class="col-12 col-lg-8">
+                <div class="bg-white rounded shadow-sm p-3">
+                    <h6>Order ID: {{ order.order_id }}</h6>
+                    <h6>Total items: {{ order.total_quantity }}</h6>
+                    <hr>
+
+                    {% for i in order_items %}
+                        <div class="mb-4">
+                            <div class="d-flex align-items-start gap-3 mt-3">
+                                {% if i.image %}
+                                    <img src="{{ i.image.url }}" class="img-fluid rounded" style="max-width:100px;">
+                                {% else %}
+                                    <p>No image available</p>
+                                {% endif %}
+                                
+                                <div>
+                                    <p class="mb-1 fw-semibold">{{ i.product.p_name }}</p>
+                                    <p class="mb-1">Qty: {{ i.quantity }}</p>
+                                    <p class="mb-1">₹ {{ i.amount }}</p>
+
+                                    <p class="mb-1">
+                                        Delivery Status: 
+                                        {% if i.delivery_status == "Delivered" %}
+                                            <span class="text-success">{{ i.delivery_status }}</span> on {{ i.delivery_date }}
+                                        {% elif i.delivery_status == "Cancelled" %}
+                                            <span class="text-danger">{{ i.delivery_status }}</span>
+                                        {% else %}
+                                            <span class="text-secondary">{{ i.delivery_status }}</span>
+                                        {% endif %}
+                                    </p>
+
+                                    {% if i.refund_status != "Not Requested" and i.delivery_status != "Cancelled" %}
+                                        <p class="mb-1">
+                                            Refund Status: 
+                                            {% if i.refund_status == "Completed" %}
+                                                <span class="text-success">{{ i.refund_status }}</span>
+                                                (Amount : {{i.refund_amount}})
+                                            {% elif i.refund_status == "Requested" %}
+                                                <span class="text-warning">{{ i.refund_status }}</span>
+                                            {% else %}
+                                                <span class="text-secondary">{{ i.refund_status }}</span>
+                                            {% endif %}
+                                
+                                    {% endif %}
+
+                                    {% if i.delivery_status == "Delivered" and i.can_return and i.refund_status == "Not Requested" %}
+                                        <form method="post" action="{% url 'request_return' i.id %}" class="d-inline">
+                                            {% csrf_token %}
+                                            <button type="submit" class="btn btn-sm btn-warning mt-1">Request Return</button>
+                                        </form>
+                                  
+                                    {% endif %}
+                                    {% if i.delivery_status == "Pending"%}
+                                        <form method="post" action="{% url 'cancel_order' i.id %}" class="d-inline">
+                                            {% csrf_token %}
+                                            <button type="submit" class="btn btn-sm btn-danger mt-1">Cancel</button>
+                                        </form>
+                                    {% endif %}
+                            
+
+                                </div>
+                            </div>
+                            <hr>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div class="col-12 col-lg-4">
+                <div class="bg-white rounded shadow-sm p-3 mb-3">
+                    <h5>Order Payment Details</h5>
+                    <hr>
+                    <table class="table table-sm">
+                        <tr>
+                            <td>Order Amount</td>
+                            <td>₹{{ order.order_amount }}</td>
+                        </tr>
+                        <tr>
+                            <td>Order Savings</td>
+                            <td>₹{{ order.order_savings }}</td>
+                        </tr>
+                        <tr>
+                            <td>Shipping Charge</td>
+                            <td>₹{{ order.delivery_charge }}</td>
+                        </tr>
+                        <tr>
+                            <td>Platform Fee</td>
+                            <td>₹{{ order.platform_fee }}</td>
+                        </tr>
+                    </table>
+                    <h6 class="text-center fw-bold">Total ({{ order.total_quantity }} items): ₹{{ order.total_amount }}</h6>
+                </div>
+
+                <div class="bg-white rounded shadow-sm p-3 mb-3">
+                    <h6>Payment Mode</h6>
+                    <div class="d-flex justify-content-between">
+                        <p class="mb-0">{{ order.payment_method }}</p>
+                        <p class="mb-0">₹{{ order.total_amount }}</p>
+                    </div>
+                    {% comment %} <p class="mt-2 mb-0">Payment Status: <b>{{ order.payment_status }}</b></p> {% endcomment %}
+                </div>
+
+                <div class="bg-white rounded shadow-sm p-3">
+                    <h6>Deliver to</h6>
+                    <p class="mb-0">{{ order.address.name }}</p>
+                    <p class="mb-0">{{ order.address.address|linebreaksbr }}</p>
+                    <p class="mb-0">{{ order.address.pincode }}</p>
+                    <p class="mb-0">Phone: {{ order.address.contact_no }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,61 @@
+{% extends "user/extend.html" %}
+{% block 'title' %}Sign Up Page{% endblock %}
+{% load static %}
+
+{% block 'content' %}
+<div class="container-fluid min-vh-100 d-flex align-items-center justify-content-center "
+     style='background: url("{% static "images/signup_background.jpg" %}") no-repeat center center; background-size: cover;'>
+
+    <div class="card p-4 p-md-5 bg-light border rounded shadow col-12 col-sm-10 col-md-8 col-lg-5 my-5">
+        <h2 class="text-center mb-4">Sign Up</h2>
+
+        <form action="" method="POST">
+            {% csrf_token %}
+
+            <div class="mb-3">
+                <label for="f" class="form-label">First Name</label>
+                <input type="text" name="first" id="f" class="form-control" placeholder="First name" required>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Last Name</label>
+                <input type="text" name="last" class="form-control" placeholder="Last name" required>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Username</label>
+                <input type="text" name="username" class="form-control" placeholder="Username" required>
+                {% for message in messages %}
+                    <div class="alert alert-warning mt-1">{{ message }}</div>
+                {% endfor %}
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Password</label>
+                <input type="password" name="password" class="form-control" placeholder="Password" required>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Confirm Password</label>
+                <input type="password" name="confirm_password" class="form-control" placeholder="Re-enter password" required>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Email</label>
+                <input type="email" name="email" class="form-control" placeholder="Enter email" required>
+            </div>
+
+            <div class="d-grid mb-3">
+                <button type="submit" class="btn btn-dark">Sign Up</button>
+            </div>
+
+        </form>
+
+        <div class="text-center">
+            <p>Already have an account?</p>
+            <a href="{% url 'signin' %}" class="btn btn-outline-dark w-50">Login</a>
+        </div>
+
+    </div>
+</div>
+{% endblock %}
