@@ -45,9 +45,9 @@ def get_image_similarity(pid):
 def get_category_brand_similarity(pid):
     target = Products.objects.get(p_id=pid)
     sims = []
-    for db_pid in product_ids:  # loop over embeddings list
+    for db_pid in product_ids:
         try:
-            p = Products.objects.get(p_id=db_pid)
+            p = Products.objects.get(p_id=db_pid)  # fetch product
         except Products.DoesNotExist:
             sims.append(0)
             continue
@@ -60,6 +60,7 @@ def get_category_brand_similarity(pid):
         sims.append(score)
 
     return np.array(sims)
+
 
 
 # ------------------------------

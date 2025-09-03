@@ -13,6 +13,7 @@ product_ids = []
 # Loop through all product images
 for img_obj in Product_image.objects.all():
     img_path = img_obj.image.path
+    print("img_path",img_path)
     img = keras_image.load_img(img_path, target_size=(224, 224))
     x = keras_image.img_to_array(img)
     x = np.expand_dims(x, axis=0)
